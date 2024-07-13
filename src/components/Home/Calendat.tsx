@@ -11,6 +11,8 @@ const CalendarPage = () => {
     const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<string | null>(null);
     const [showToday,setShowtoday] = useState<boolean>(false) ;
+    const [searchList,setSearchlist] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
     const fetchCalendar = async () => {
         try {
@@ -43,14 +45,24 @@ const CalendarPage = () => {
         setShowtoday(!showToday)
     };
 
+    const handleInputChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchlist(e.target.value);
+    }
+
+    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setSearchTerm(searchList);
+        console.log(searchTerm)
+    };
+
     const filteredList = list.filter(item => {
         const matchesDay = selectedDay ? item.NgayTheoDoiHeThong === selectedDay : true;
         const matchesMonth = selectedMonth ? item.ThangTheoDoiHeThong === selectedMonth : true;
         const matchesYear = selectedYear ? item.NamTheoDoiHeThong === selectedYear : true;
 
         const istoday = new Date().getDate().toString() === item.NgayTheoDoiHeThong && (new Date().getMonth() + 1).toString() === item.ThangTheoDoiHeThong && new Date().getFullYear().toString() === item.NamTheoDoiHeThong
-
-        return matchesDay && matchesMonth && matchesYear && (!showToday || istoday);
+        const matchesSearch = item.NguoiTheoDoiHeThong.toLowerCase().includes(searchList.toLowerCase());
+        return matchesDay && matchesMonth && matchesYear && (!showToday || istoday) && matchesSearch;
     });
 
     if (loading) {
@@ -64,6 +76,14 @@ const CalendarPage = () => {
     return (
         <div className="min-h-screen flex flex-col items-center p-4">
             <h1 className="text-2xl font-bold mb-4">Lịch Theo Dõi Hệ Thống</h1>
+            <div className="flex justify-between mb-4 ">
+                <form onSubmit={handleSearch} className="flex justify-between items-center gap-4">
+                    <input type="text" name="" value={searchList} onChange={handleInputChangeSearch} className="rounded-lg px-4 py-2 h-full outline-none" id="" placeholder="Tìm kiếm..."/>
+                    <button className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg focus:outline-none hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition duration-300">
+                        Tìm kiếm
+                    </button>
+                </form>
+            </div>
             <div className="mb-4 w-full h-full max-w-md items-center justify-center flex space-x-2">
                 <select onChange={handleDayChange} className="p-2 border text-xl shadow-lg rounded-lg">
                     <option value="">Ngày</option>
