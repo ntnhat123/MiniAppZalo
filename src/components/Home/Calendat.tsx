@@ -110,12 +110,12 @@ const CalendarPage = () => {
                         <h1>Người trực</h1>
                     </div>
                     <div className="justify-center items-center flex gap-2">
-                        <input type="checkbox" className="w-5 h-5" name="" id="" checked={showToday} onClick={handleCheckboxChange} />
+                        <input type="checkbox" className="w-5 h-5" name="" id="" checked={showToday} onChange={handleCheckboxChange} />
                         <label htmlFor="">Hôm nay</label>
                     </div>
                 </div>
                 {filteredList.map((item, index) => (
-                    <div className="flex justify-between border mt-4 px-5 bg-white rounded-2xl p-4">
+                    <div key={index} className="flex justify-between border mt-4 px-5 bg-white rounded-2xl p-4">
                         <div className="flex flex-col">
                             <h1 className="text-xl font-medium">{item.NguoiTheoDoiHeThong}</h1>
                             <h1 className="">{item.NgayTheoDoiHeThong}/{item.ThangTheoDoiHeThong}/{item.NamTheoDoiHeThong}</h1>
