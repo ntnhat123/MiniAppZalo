@@ -7,6 +7,13 @@ export default () => {
   return defineConfig({
     root: "./src",
     base: "",
-    plugins: [react(), tsconfigPaths()],
+    plugins: [react(), {
+      name: "override-vite-config",
+      config: () => ({
+        build: {
+          target: "esnext",
+        },
+      }),
+    },tsconfigPaths()],
   });
 };

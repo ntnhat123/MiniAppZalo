@@ -11,7 +11,7 @@ const CalendarPage = () => {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<string | null>(null);
-    const [showToday, setShowToday] = useState<boolean>(false);
+    const [showToday, setShowToday] = useState<boolean>(true);
     const [searchList, setSearchList] = useState<string>("");
     const [openNote, setOpenNote] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<ICalendar | null>(null);
@@ -67,18 +67,32 @@ const CalendarPage = () => {
         setSearchList(term);
     };
 
+    const getWeek =() => {
+        const today = new Date();
+        const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+        const endOfWeek = new Date(today.setDate(today.getDate() + 6));
+        return {startOfWeek,endOfWeek}; 
+    };
+
+    const isWithinWeek = (date: Date, startOfWeek: Date, endOfWeek: Date) => {
+        return date >= startOfWeek && date <= endOfWeek;
+    };
+
     const filteredList = list.filter(item => {
         const matchesDay = selectedDay ? item.NgayTheoDoiHeThong === selectedDay : true;
         const matchesMonth = selectedMonth ? item.ThangTheoDoiHeThong === selectedMonth : true;
         const matchesYear = selectedYear ? item.NamTheoDoiHeThong === selectedYear : true;
 
-        const today = new Date();
-        const isToday = showToday && today.getDate().toString() === item.NgayTheoDoiHeThong && (today.getMonth() + 1).toString() === item.ThangTheoDoiHeThong && today.getFullYear().toString() === item.NamTheoDoiHeThong;
-
+        const itemDate = new Date(`${item.NamTheoDoiHeThong}-${item.ThangTheoDoiHeThong}-${item.NgayTheoDoiHeThong}`);
+        const { startOfWeek, endOfWeek } = getWeek();
+        const isThisWeek = showToday && isWithinWeek(itemDate,startOfWeek,endOfWeek);
+        
         const matchesSearch = searchList ? item.NguoiTheoDoiHeThong.toLowerCase().includes(searchList.toLowerCase()) : true;
-
-        return matchesDay && matchesMonth && matchesYear && (showToday ? isToday : true) && matchesSearch;
+        
+        return matchesDay && matchesMonth && matchesYear && (showToday ? isThisWeek : true) && matchesSearch;
     });
+    
+    const today = new Date();
 
     if (loading) {
         return <div>Loading...</div>;
@@ -94,7 +108,7 @@ const CalendarPage = () => {
             <div className="flex justify-between mb-4">
                 <form onSubmit={handleSearch} className="flex justify-between items-center gap-4">
                     <input type="text" value={searchList} onChange={handleInputChangeSearch} className="rounded-lg px-4 py-2 h-full outline-none" placeholder="Tìm kiếm..." />
-                    <button type="submit" className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg focus:outline-none hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition duration-300">
+                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition duration-300">
                         Tìm kiếm
                     </button>
                 </form>
@@ -126,20 +140,24 @@ const CalendarPage = () => {
                     </div>
                     <div className="justify-center items-center flex gap-2">
                         <input type="checkbox" className="md:w-5 md:h-5" checked={showToday} onChange={handleCheckboxChange} />
-                        <label htmlFor="">Hôm nay</label>
+                        <label htmlFor="">Tuần này</label>
                     </div>
                 </div>
-                {filteredList.map((item, index) => (
-                    <div key={index} className="flex justify-between border mt-4 px-5 bg-white rounded-2xl p-4">
-                        <div className="flex flex-col">
-                            <h1 className="text-xl font-medium">{item.NguoiTheoDoiHeThong}</h1>
-                            <h1>{item.NgayTheoDoiHeThong}/{item.ThangTheoDoiHeThong}/{item.NamTheoDoiHeThong}</h1>
+                {filteredList.map((item, index) => {
+                    const itemDate = new Date(`${item.NamTheoDoiHeThong}-${item.ThangTheoDoiHeThong}-${item.NgayTheoDoiHeThong}`);
+                    const isToday = itemDate.toDateString() === today.toDateString();
+                    return (
+                        <div key={index} className={`flex ${isToday ? "font-bold justify-between border mt-4 px-5 bg-white rounded-2xl p-4 drop-shadow-2xl" : "justify-between border mt-4 px-5 bg-white rounded-2xl p-4"}`}>
+                            <div className="flex-1 ">
+                                <div>{item.NgayTheoDoiHeThong}/{item.ThangTheoDoiHeThong}/{item.NamTheoDoiHeThong}</div>
+                                <div>{item.NguoiTheoDoiHeThong}</div>
+                            </div>
+                            <div className="flex justify-center items-center cursor-pointer" onClick={() => handleNote(item)}>
+                                <FaRegStickyNote />
+                            </div>
                         </div>
-                        <div className="flex justify-center items-center cursor-pointer" onClick={() => handleNote(item)}>
-                            <FaRegStickyNote />
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
             {openNote && selectedItem && (
                 <PopupNote handleClose={handleClose} list={selectedItem}/>
