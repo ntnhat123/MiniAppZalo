@@ -70,7 +70,7 @@ const CalendarPage = () => {
     const getWeek =() => {
         const today = new Date();
         const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-        const endOfWeek = new Date(today.setDate(today.getDate() + 6));
+        const endOfWeek = new Date(today.setDate(today.getDate() + 7));
         return {startOfWeek,endOfWeek}; 
     };
 
