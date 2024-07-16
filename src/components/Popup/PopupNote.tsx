@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 interface IProps{
     list: ICalendar;
     handleClose: () => void;
-
 }
 const PopupNote = ({list,handleClose}: IProps) => {
     return(

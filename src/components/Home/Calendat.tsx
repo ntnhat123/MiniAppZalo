@@ -51,7 +51,7 @@ const CalendarPage = () => {
         setSearchList(e.target.value);
     };
 
-    const handleNote = (item) => {
+    const handleNote = (item: ICalendar) => {
         setOpenNote(true);
         setSelectedItem(item);
     };
@@ -67,32 +67,35 @@ const CalendarPage = () => {
         setSearchList(term);
     };
 
-    const getWeek =() => {
+    const getWeek = () => {
         const today = new Date();
-        const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-        const endOfWeek = new Date(today.setDate(today.getDate() + 7));
-        return {startOfWeek,endOfWeek}; 
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 7); 
+        return { startOfWeek, endOfWeek };
     };
 
     const isWithinWeek = (date: Date, startOfWeek: Date, endOfWeek: Date) => {
         return date >= startOfWeek && date <= endOfWeek;
     };
 
+    const today = new Date();
+
     const filteredList = list.filter(item => {
         const matchesDay = selectedDay ? item.NgayTheoDoiHeThong === selectedDay : true;
         const matchesMonth = selectedMonth ? item.ThangTheoDoiHeThong === selectedMonth : true;
         const matchesYear = selectedYear ? item.NamTheoDoiHeThong === selectedYear : true;
 
-        const itemDate = new Date(`${item.NamTheoDoiHeThong}-${item.ThangTheoDoiHeThong}-${item.NgayTheoDoiHeThong}`);
+        const itemDate = new Date(parseInt(item.NamTheoDoiHeThong), parseInt(item.ThangTheoDoiHeThong) - 1, parseInt(item.NgayTheoDoiHeThong));
+
         const { startOfWeek, endOfWeek } = getWeek();
-        const isThisWeek = showToday && isWithinWeek(itemDate,startOfWeek,endOfWeek);
+        const isThisWeek = showToday && isWithinWeek(itemDate, startOfWeek, endOfWeek);
         
         const matchesSearch = searchList ? item.NguoiTheoDoiHeThong.toLowerCase().includes(searchList.toLowerCase()) : true;
         
         return matchesDay && matchesMonth && matchesYear && (showToday ? isThisWeek : true) && matchesSearch;
     });
-    
-    const today = new Date();
 
     if (loading) {
         return <div>Loading...</div>;
@@ -144,13 +147,13 @@ const CalendarPage = () => {
                     </div>
                 </div>
                 {filteredList.map((item, index) => {
-                    const itemDate = new Date(`${item.NamTheoDoiHeThong}-${item.ThangTheoDoiHeThong}-${item.NgayTheoDoiHeThong}`);
+                    const itemDate = new Date(parseInt(item.NamTheoDoiHeThong), parseInt(item.ThangTheoDoiHeThong) - 1, parseInt(item.NgayTheoDoiHeThong));
                     const isToday = itemDate.toDateString() === today.toDateString();
                     return (
                         <div key={index} className={`flex ${isToday ? "font-bold justify-between border mt-4 px-5 bg-white rounded-2xl p-4 drop-shadow-2xl" : "justify-between border mt-4 px-5 bg-white rounded-2xl p-4"}`}>
                             <div className="flex-1 ">
-                                <div>{item.NgayTheoDoiHeThong}/{item.ThangTheoDoiHeThong}/{item.NamTheoDoiHeThong}</div>
                                 <div>{item.NguoiTheoDoiHeThong}</div>
+                                <div>{item.NgayTheoDoiHeThong}/{item.ThangTheoDoiHeThong}/{item.NamTheoDoiHeThong}</div>
                             </div>
                             <div className="flex justify-center items-center cursor-pointer" onClick={() => handleNote(item)}>
                                 <FaRegStickyNote />
