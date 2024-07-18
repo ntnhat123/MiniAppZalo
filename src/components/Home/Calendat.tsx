@@ -1,6 +1,6 @@
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getCalendar } from "api/Calendar";
 import { ICalendar } from "model/Calendar";
-import React, { useEffect, useState } from "react";
 import { FaRegStickyNote } from "react-icons/fa";
 import PopupNote from "components/Popup/PopupNote";
 
@@ -9,8 +9,8 @@ const CalendarPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
-    const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
-    const [selectedYear, setSelectedYear] = useState<string | null>(null);
+    const [selectedMonth, setSelectedMonth] = useState<string>((new Date().getMonth() + 1).toString());
+    const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
     const [showToday, setShowToday] = useState<boolean>(true);
     const [searchList, setSearchList] = useState<string>("");
     const [openNote, setOpenNote] = useState<boolean>(false);
@@ -20,7 +20,7 @@ const CalendarPage = () => {
         fetchCalendar();
     }, []);
 
-    const fetchCalendar = async () => {
+    const fetchCalendar = useCallback(async () => {
         try {
             const listCalendar = await getCalendar();
             setList(listCalendar.data);
@@ -29,22 +29,30 @@ const CalendarPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedDay(e.target.value || null);
     };
 
     const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedMonth(e.target.value || null);
+        setSelectedMonth(e.target.value);
     };
 
     const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedYear(e.target.value || null);
+        setSelectedYear(e.target.value);
     };
 
     const handleCheckboxChange = () => {
-        setShowToday(!showToday);
+        const newShowToday = !showToday;
+        setShowToday(newShowToday);
+        if (newShowToday) {
+            setSelectedMonth((new Date().getMonth() + 1).toString());
+            setSelectedYear(new Date().getFullYear().toString());
+        } else {
+            setSelectedMonth('');
+            setSelectedYear('');
+        }
     };
 
     const handleInputChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +73,7 @@ const CalendarPage = () => {
         e.preventDefault();
         const term = searchList.trim();
         setSearchList(term);
+        setShowToday(false);
     };
 
     const getWeek = () => {
@@ -72,7 +81,7 @@ const CalendarPage = () => {
         const startOfWeek = new Date(today);
         startOfWeek.setDate(today.getDate() - today.getDay());
         const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 7);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
         return { startOfWeek, endOfWeek };
     };
 
@@ -81,23 +90,23 @@ const CalendarPage = () => {
     };
 
     const today = new Date();
-    const currentMonth = today.getMonth() + 1;
-    const currentYear = today.getFullYear();
 
-    const filteredList = list.filter(item => {
-        const matchesDay = selectedDay ? item.NgayTheoDoiHeThong === selectedDay : true;
-        const matchesMonth = selectedMonth ? item.ThangTheoDoiHeThong === selectedMonth : true;
-        const matchesYear = selectedYear ? item.NamTheoDoiHeThong === selectedYear : true;
+    const filteredList = useMemo(() => {
+        return list.filter(item => {
+            const matchesDay = selectedDay ? item.NgayTheoDoiHeThong === selectedDay : true;
+            const matchesMonth = selectedMonth ? item.ThangTheoDoiHeThong === selectedMonth : true;
+            const matchesYear = selectedYear ? item.NamTheoDoiHeThong === selectedYear : true;
 
-        const itemDate = new Date(parseInt(item.NamTheoDoiHeThong), parseInt(item.ThangTheoDoiHeThong) - 1, parseInt(item.NgayTheoDoiHeThong));
+            const itemDate = new Date(parseInt(item.NamTheoDoiHeThong), parseInt(item.ThangTheoDoiHeThong) - 1, parseInt(item.NgayTheoDoiHeThong));
 
-        const { startOfWeek, endOfWeek } = getWeek();
-        const isThisWeek = showToday && isWithinWeek(itemDate, startOfWeek, endOfWeek);
+            const { startOfWeek, endOfWeek } = getWeek();
+            const isThisWeek = showToday && isWithinWeek(itemDate, startOfWeek, endOfWeek);
 
-        const matchesSearch = searchList ? item.NguoiTheoDoiHeThong.toLowerCase().includes(searchList.toLowerCase()) : true;
+            const matchesSearch = searchList ? item.NguoiTheoDoiHeThong.toLowerCase().includes(searchList.toLowerCase()) : true;
 
-        return matchesDay && matchesMonth && matchesYear && (showToday ? isThisWeek : true) && matchesSearch;
-    });
+            return matchesDay && matchesMonth && matchesYear && (showToday ? isThisWeek : true) && matchesSearch;
+        });
+    }, [list, selectedDay, selectedMonth, selectedYear, showToday, searchList]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -109,7 +118,7 @@ const CalendarPage = () => {
 
     return (
         <div className="min-h-screen flex flex-col items-center p-4">
-            <h1 className="text-2xl font-bold mb-4">Lịch Theo Dõi Hệ Thống</h1>
+            <h1 className="text-2xl font-bold mb-4">LỊCH THEO DÕI HỆ THỐNG</h1>
             <div className="flex justify-between mb-4">
                 <form onSubmit={handleSearch} className="flex justify-between items-center gap-4">
                     <input type="text" value={searchList} onChange={handleInputChangeSearch} className="rounded-lg px-4 py-2 h-full outline-none" placeholder="Tìm kiếm..." />
@@ -125,25 +134,17 @@ const CalendarPage = () => {
                         <option key={index} value={day}>{day}</option>
                     ))}
                 </select>
-                <select onChange={handleMonthChange} className="p-2 border text-xl shadow-lg rounded-lg" defaultValue={currentMonth.toString()}>
-                    {[...new Set(list.map(item => item.ThangTheoDoiHeThong))].map((month, index) => {
-                        const isCurrentMonth = parseInt(month) === currentMonth;
-                        return (
-                            <option key={index} value={month} className={isCurrentMonth ? "font-bold" : ""}>
-                                {month}
-                            </option>
-                        );
-                    })}
+                <select onChange={handleMonthChange} className="p-2 border text-xl shadow-lg rounded-lg" value={selectedMonth || ""}>
+                    <option value="">Tháng</option>
+                    {[...new Set(list.map(item => item.ThangTheoDoiHeThong))].map((month, index) => (
+                        <option key={index} value={month}>{month}</option>
+                    ))}
                 </select>
-                <select onChange={handleYearChange} className="p-2 border text-xl shadow-lg rounded-lg" defaultValue={currentYear.toString()}>
-                    {[...new Set(list.map(item => item.NamTheoDoiHeThong))].map((year, index) => {
-                        const isCurrentYear = parseInt(year) === currentYear;
-                        return (
-                            <option key={index} value={year} className={isCurrentYear ? "font-bold" : ""}>
-                                {year}
-                            </option>
-                        );
-                    })}
+                <select onChange={handleYearChange} className="p-2 border text-xl shadow-lg rounded-lg" value={selectedYear || ""} >
+                    <option value="">Năm</option>
+                    {[...new Set(list.map(item => item.NamTheoDoiHeThong))].map((year, index) => (
+                        <option key={index} value={year}>{year}</option>
+                    ))}
                 </select>
             </div>
             <div className="w-full max-w-4xl">
