@@ -72,7 +72,7 @@ const CalendarPage = () => {
         const startOfWeek = new Date(today);
         startOfWeek.setDate(today.getDate() - today.getDay());
         const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 7); 
+        endOfWeek.setDate(startOfWeek.getDate() + 7);
         return { startOfWeek, endOfWeek };
     };
 
@@ -81,6 +81,8 @@ const CalendarPage = () => {
     };
 
     const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
 
     const filteredList = list.filter(item => {
         const matchesDay = selectedDay ? item.NgayTheoDoiHeThong === selectedDay : true;
@@ -91,9 +93,9 @@ const CalendarPage = () => {
 
         const { startOfWeek, endOfWeek } = getWeek();
         const isThisWeek = showToday && isWithinWeek(itemDate, startOfWeek, endOfWeek);
-        
+
         const matchesSearch = searchList ? item.NguoiTheoDoiHeThong.toLowerCase().includes(searchList.toLowerCase()) : true;
-        
+
         return matchesDay && matchesMonth && matchesYear && (showToday ? isThisWeek : true) && matchesSearch;
     });
 
@@ -111,7 +113,7 @@ const CalendarPage = () => {
             <div className="flex justify-between mb-4">
                 <form onSubmit={handleSearch} className="flex justify-between items-center gap-4">
                     <input type="text" value={searchList} onChange={handleInputChangeSearch} className="rounded-lg px-4 py-2 h-full outline-none" placeholder="Tìm kiếm..." />
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition duration-300">
+                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none">
                         Tìm kiếm
                     </button>
                 </form>
@@ -119,21 +121,29 @@ const CalendarPage = () => {
             <div className="mb-4 w-full max-w-md items-center justify-center flex space-x-2">
                 <select onChange={handleDayChange} className="p-2 border text-xl shadow-lg rounded-lg">
                     <option value="">Ngày</option>
-                    {Array.from({ length: 31 }, (_, i) => (
-                        <option key={i + 1} value={(i + 1).toString()}>{i + 1}</option>
+                    {[...new Set(list.map(item => item.NgayTheoDoiHeThong))].map((day, index) => (
+                        <option key={index} value={day}>{day}</option>
                     ))}
                 </select>
-                <select onChange={handleMonthChange} className="p-2 border text-xl shadow-lg rounded-lg">
-                    <option value="">Tháng</option>
-                    {Array.from({ length: 12 }, (_, i) => (
-                        <option key={i + 1} value={(i + 1).toString()}>{i + 1}</option>
-                    ))}
+                <select onChange={handleMonthChange} className="p-2 border text-xl shadow-lg rounded-lg" defaultValue={currentMonth.toString()}>
+                    {[...new Set(list.map(item => item.ThangTheoDoiHeThong))].map((month, index) => {
+                        const isCurrentMonth = parseInt(month) === currentMonth;
+                        return (
+                            <option key={index} value={month} className={isCurrentMonth ? "font-bold" : ""}>
+                                {month}
+                            </option>
+                        );
+                    })}
                 </select>
-                <select onChange={handleYearChange} className="p-2 border text-xl shadow-lg rounded-lg">
-                    <option value="">Năm</option>
-                    {Array.from({ length: 50 }, (_, i) => (
-                        <option key={i + 2000} value={(i + 2000).toString()}>{i + 2000}</option>
-                    ))}
+                <select onChange={handleYearChange} className="p-2 border text-xl shadow-lg rounded-lg" defaultValue={currentYear.toString()}>
+                    {[...new Set(list.map(item => item.NamTheoDoiHeThong))].map((year, index) => {
+                        const isCurrentYear = parseInt(year) === currentYear;
+                        return (
+                            <option key={index} value={year} className={isCurrentYear ? "font-bold" : ""}>
+                                {year}
+                            </option>
+                        );
+                    })}
                 </select>
             </div>
             <div className="w-full max-w-4xl">
