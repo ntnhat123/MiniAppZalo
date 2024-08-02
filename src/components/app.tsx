@@ -1,10 +1,11 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import { App, ZMPRouter, AnimationRoutes, SnackbarProvider } from "zmp-ui";
+import { App, ZMPRouter, AnimationRoutes, SnackbarProvider, Calendar } from "zmp-ui";
 import { RecoilRoot } from "recoil";
 import HomePage from "pages/index";
 import User from "pages/user";
-import AddRessPage from "pages/address";
+import CalendarrPage from "pages/calendar";
+import CalendarPage from "./Home/Calendar";
 
 const MyApp = () => {
   return (
@@ -13,8 +14,8 @@ const MyApp = () => {
         <SnackbarProvider>
           <ZMPRouter>
             <AnimationRoutes>
-              <Route path="/" element={<HomePage></HomePage>}></Route>
-              <Route path="/address" element={<AddRessPage></AddRessPage>}></Route>
+              <Route path="/" element={<HomePage/>}></Route>
+              <Route path="/calendar" element={<CalendarrPage/>}></Route>
               <Route path="/user" element={<User></User>}></Route>
             </AnimationRoutes>
           </ZMPRouter>

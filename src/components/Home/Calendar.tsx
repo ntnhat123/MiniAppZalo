@@ -110,7 +110,7 @@ const CalendarPage = () => {
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div>{error}</div>
     }
 
     return (
