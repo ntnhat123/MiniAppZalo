@@ -2,6 +2,7 @@ import { postLogin } from 'api/Login';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS, { SHA1 } from 'crypto-js';
+import LogoImage from 'logo.jpg'
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -31,8 +32,12 @@ const LoginForm = () => {
     }
   }
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+  <div className="flex items-center justify-center min-h-screen overflow-hidden">
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-blue-500 to-white">
+      <div className='flex items-center justify-center rounded-full shadow-lg w-32 h-32'>
+        <img src={LogoImage} alt="" className='w-full h-full rounded-full object-cover'/>
+      </div>
+      <div className="bg-white md:p-6 p-7 md:m-1 m-4 rounded-2xl shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-4 text-center">Đăng Nhập</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -41,6 +46,7 @@ const LoginForm = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              placeholder='Nhập tên người dùng...'
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -51,6 +57,7 @@ const LoginForm = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder='Nhập mật khẩu...'
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -64,6 +71,8 @@ const LoginForm = () => {
         </form>
       </div>
     </div>
+  </div>
+
   );
 };
 
