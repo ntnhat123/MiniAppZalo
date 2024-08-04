@@ -8,29 +8,9 @@ const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // const handleSubmit = async(e: React.ChangeEvent<HTMLInputElement>) => {
-  //   e.preventDefault();
-  //   const hash = SHA1(password);
-  //   const hashWords = hash.words;
-  //   let hashpassword = '';
-  //   for (let i = 0; i < hashWords.length * 4; i++) {
-  //     const byte = (hashWords[Math.floor(i / 4)] >> (8 * (3 - (i % 4)))) & 0xff;
-  //     hashpassword += byte.toString();
-  //   }
 
-  //   console.log({ username,  hashpassword });
-    
-  //   try {
-  //     const res = await postLogin(username, hashpassword);
-  //     if (res) {
-  //       navigate('calendar');
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during login:", error);
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>)=>{
-   e.preventDefault();
+    e.preventDefault();
     const hash = SHA1(password);
     const hashWords = hash.words;
     let hashpassword = '';

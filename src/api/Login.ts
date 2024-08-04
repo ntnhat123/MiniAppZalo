@@ -7,13 +7,7 @@ export const postLogin = async(UserName: string,PassWord: string) => {
     const data = {UserName,PassWord};
     const url = apiRouter.login;
     try{
-        const res = await axiosClient.post(url,data,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const res = await axiosClient.post(url,data);
         return res.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
