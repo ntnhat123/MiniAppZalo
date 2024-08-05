@@ -76,7 +76,7 @@ const CalendarPage = () => {
     const today = new Date();
     const getWeek = () => {
         const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - (today.getDay() === 0 ? 7 : today.getDay() - 1));
+        startOfWeek.setDate(today.getDate() - (today.getDay() + 6) % 7 - 1);
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(startOfWeek.getDate() + 7);
         return { startOfWeek, endOfWeek };
@@ -85,8 +85,6 @@ const CalendarPage = () => {
     const isWithinWeek = (date: Date, startOfWeek: Date, endOfWeek: Date) => {
         return date >= startOfWeek && date <= endOfWeek;
     };
-
-    // const today = new Date();
 
     const filteredList = useMemo(() => {
         return list.filter(item => {

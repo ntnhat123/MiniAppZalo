@@ -6,6 +6,8 @@ import HomePage from "pages/index";
 import User from "pages/user";
 import CalendarrPage from "pages/calendar";
 import CalendarPage from "./Home/Calendar";
+import StatusList from "./ReportStatus/ReportStatus";
+import CategoryTask from "./ReportStatus/CategoryTask";
 
 const MyApp = () => {
   return (
@@ -14,8 +16,8 @@ const MyApp = () => {
         <SnackbarProvider>
           <ZMPRouter>
             <AnimationRoutes>
-              <Route path="/" element={<HomePage/>}></Route>
-              <Route path="/calendar" element={<CalendarrPage/>}></Route>
+              {/* <Route path="/" element={<HomePage/>}></Route> */}
+              <Route path="/" element={<CategoryTask/>}></Route>
               <Route path="/user" element={<User></User>}></Route>
             </AnimationRoutes>
           </ZMPRouter>

@@ -5,4 +5,6 @@ export const apiRouter ={
     login: `/api/${token}/UserLogin`,
     //
     calendar: `/api/${token}/LichTruc`,
+    ReportStatus: `/api/${token}/ReportStatus`,
+    CategoryTask: `/api/${token}/DanhMucNhiemVu`,
 }
