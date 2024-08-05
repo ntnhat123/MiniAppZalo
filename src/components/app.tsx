@@ -3,9 +3,7 @@ import { Route } from "react-router-dom";
 import { App, ZMPRouter, AnimationRoutes, SnackbarProvider, Calendar } from "zmp-ui";
 import { RecoilRoot } from "recoil";
 import HomePage from "pages/index";
-import User from "pages/user";
 import CalendarrPage from "pages/calendar";
-import CalendarPage from "./Home/Calendar";
 import StatusList from "./ReportStatus/ReportStatus";
 import CategoryTask from "./ReportStatus/CategoryTask";
 
@@ -16,9 +14,8 @@ const MyApp = () => {
         <SnackbarProvider>
           <ZMPRouter>
             <AnimationRoutes>
-              {/* <Route path="/" element={<HomePage/>}></Route> */}
-              <Route path="/" element={<CategoryTask/>}></Route>
-              <Route path="/user" element={<User></User>}></Route>
+              <Route path="/" element={<HomePage/>}></Route>
+              <Route path="/calendar" element={<CalendarrPage/>}></Route>
             </AnimationRoutes>
           </ZMPRouter>
         </SnackbarProvider>

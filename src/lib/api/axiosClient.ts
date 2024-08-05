@@ -4,7 +4,10 @@ import { configURL } from "utils/constants";
 const config: AxiosRequestConfig = {
     baseURL: configURL.baseURL,
     withCredentials: false,
-    timeout: 1000 * 300
+    timeout: 1000 * 300,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    }
 };
 
 const axiosClient: AxiosInstance = axios.create(config);
