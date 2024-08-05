@@ -1,4 +1,4 @@
-export interface INhiemVu{
+export interface IReportStatus{
     StatusID: string;
     StatusName: string;
 }
