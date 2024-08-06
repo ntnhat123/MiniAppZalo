@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CryptoJS, { SHA1 } from 'crypto-js';
 import LogoImage from 'logo.jpg'
 import { IoEyeSharp } from "react-icons/io5";
+import { AiFillExclamationCircle } from "react-icons/ai";
 import { FaEyeSlash } from "react-icons/fa";
 import { token } from 'lib/api/apiRouter';
 
@@ -30,7 +31,8 @@ const LoginForm = () => {
     try {
       const res = await postLogin(username, hashpassword);
       if (res) {
-        localStorage.setItem('@token',JSON.stringify({token}))
+        localStorage.clear();
+        localStorage.setItem('@token',JSON.stringify({token}));
         navigate('calendar');
       }
     } catch (error) {
@@ -39,11 +41,12 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('@token');
-    if (token) {
-      navigate('calendar');
-    }
-  }, [navigate]);
+    // const token = localStorage.getItem('@token');
+    // if (token) {
+    //   navigate('calendar');
+    // }
+    localStorage.getItem('@token');
+  }, []);
 
   return (
   <div className="flex items-center justify-center min-h-screen overflow-hidden">
@@ -55,11 +58,11 @@ const LoginForm = () => {
         <h2 className="text-2xl font-bold mb-4 text-center">Đăng Nhập</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Tên đăng nhập:</label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Tên đăng nhập</label>
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder='Nhập tên người dùng...'className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
           <div className="mb-4 relative">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Mật khẩu:</label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Mật khẩu</label>
               <div className="relative">
                 <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Nhập mật khẩu...' className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10" required type={isRevealPassword ? 'text' : 'password'} />
                 <span onClick={togglePassword} role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
@@ -72,8 +75,8 @@ const LoginForm = () => {
               </div> 
           </div>
           {error && (
-              <p role="alert" className="text-red-500 text-sm mb-4">
-                {error}
+              <p role="alert" className="flex items-center gap-1 text-red-500 text-sm mb-4">
+                <span><AiFillExclamationCircle /></span>{error}
               </p>
             )}
           <button

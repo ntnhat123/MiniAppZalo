@@ -16,6 +16,8 @@ const MyApp = () => {
             <AnimationRoutes>
               <Route path="/" element={<HomePage/>}></Route>
               <Route path="/calendar" element={<CalendarrPage/>}></Route>
+              <Route path="/status" element={<StatusList/>}></Route>
+              <Route path="/categorytask" element={<CategoryTask/>}></Route>
             </AnimationRoutes>
           </ZMPRouter>
         </SnackbarProvider>
