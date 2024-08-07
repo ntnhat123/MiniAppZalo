@@ -7,4 +7,5 @@ export const apiRouter ={
     calendar: `/api/${token}/LichTruc`,
     ReportStatus: `/api/${token}/ReportStatus`,
     CategoryTask: `/api/${token}/DanhMucNhiemVu`,
+    lichtruc: `/api/${token}/Calendar`,
 }

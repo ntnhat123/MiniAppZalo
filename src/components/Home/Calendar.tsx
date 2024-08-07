@@ -72,6 +72,9 @@ const CalendarPage = () => {
         setSearchList(term);
         setShowToday(false);
     };
+    const handleLogin = () => {
+        alert("Login button clicked");
+      };
 
     const today = new Date();
     const getWeek = () => {
@@ -121,6 +124,11 @@ const CalendarPage = () => {
                         Tìm kiếm
                     </button>
                 </form>
+                <header className="App-header">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none" onClick={handleLogin}>
+          Đăng nhập
+        </button>
+      </header>
             </div>
             <div className="mb-4 w-full max-w-md items-center justify-center flex space-x-2">
                 <select onChange={handleDayChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg">
