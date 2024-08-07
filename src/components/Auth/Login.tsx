@@ -41,12 +41,12 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-    // const token = localStorage.getItem('@token');
-    // if (token) {
-    //   navigate('calendar');
-    // }
-    localStorage.getItem('@token');
-  }, []);
+     const token = localStorage.getItem('@token');
+     if (token) {
+       navigate('calendar');
+     }
+    //localStorage.getItem('@token');
+  }, [navigate]);
 
   return (
   <div className="flex items-center justify-center min-h-screen overflow-hidden">
