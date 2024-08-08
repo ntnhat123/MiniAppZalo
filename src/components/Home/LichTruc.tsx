@@ -4,7 +4,7 @@ import { ILichTruc } from 'model/LichTruc';
 import { getLichTruc } from 'api/LichTruc';
 
 const LichTruc = () => {
-  const [lichtruc, setLichtruc] = useState<ILichTruc[]>([]);
+  const [lichtrucs, setLichtruc] = useState<ILichTruc[]>([]);
 
     const fetchLichTruc = async () => {
         try{
@@ -21,7 +21,7 @@ const LichTruc = () => {
     <div>
       <h1>Lịch Trực</h1>
       <ul>
-        {lichtruc.map(item => (
+        {lichtrucs.map(item => (
           <li key={item.LichID}>
              -{item.LichID}-{item.FullName}
           </li>

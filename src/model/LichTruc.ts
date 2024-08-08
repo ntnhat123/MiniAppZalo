@@ -10,5 +10,4 @@ export interface ILichTruc{
     DepartmentID: string;
     FullName: string;
     DepartmentName: string;
-    
 }

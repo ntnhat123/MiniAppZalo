@@ -3,9 +3,12 @@ import { getCalendar } from "api/Calendar";
 import { ICalendar } from "model/Calendar";
 import { FaRegStickyNote } from "react-icons/fa";
 import PopupNote from "components/Popup/PopupNote";
+import { getLichTruc } from "api/LichTruc";
+import { ILichTruc } from "model/LichTruc";
 
 const CalendarPage = () => {
     const [list, setList] = useState<ICalendar[]>([]);
+    const [lichtruc, setLichtruc] = useState<ILichTruc[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -18,16 +21,27 @@ const CalendarPage = () => {
 
     useEffect(() => {
         fetchCalendar();
+        fetchLichTruc();
     }, []);
 
     const fetchCalendar = useCallback(async () => {
         try {
             const listCalendar = await getCalendar();
             setList(listCalendar.data);
+            console.log(listCalendar)
         } catch (error) {
             setError('Error fetching data');
         } finally {
             setLoading(false);
+        }
+    }, []);
+
+    const fetchLichTruc = useCallback(async () => {
+        try {
+            const res = await getLichTruc();
+            setLichtruc(res.data);
+        } catch (error) {
+            setError('Error fetching lichtruc data');
         }
     }, []);
 
@@ -72,9 +86,6 @@ const CalendarPage = () => {
         setSearchList(term);
         setShowToday(false);
     };
-    const handleLogin = () => {
-        alert("Login button clicked");
-      };
 
     const today = new Date();
     const getWeek = () => {
@@ -124,11 +135,6 @@ const CalendarPage = () => {
                         Tìm kiếm
                     </button>
                 </form>
-                <header className="App-header">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none" onClick={handleLogin}>
-          Đăng nhập
-        </button>
-      </header>
             </div>
             <div className="mb-4 w-full max-w-md items-center justify-center flex space-x-2">
                 <select onChange={handleDayChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg">
@@ -177,7 +183,7 @@ const CalendarPage = () => {
                 })}
             </div>
             {openNote && selectedItem && (
-                <PopupNote handleClose={handleClose} list={selectedItem}/>
+                <PopupNote lichtruc={lichtruc} handleClose={handleClose} list={selectedItem} />
             )}
         </div>
     );

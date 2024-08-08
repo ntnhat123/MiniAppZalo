@@ -7,6 +7,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { FaEyeSlash } from "react-icons/fa";
 import { token } from 'lib/api/apiRouter';
+import { useAuth } from 'context/authContext';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [isRevealPassword, setIsRevealPassword] = useState(false);
   const [error,setError] = useState('');
+  const {login,errors} = useAuth();
 
   const togglePassword = () => {
     setIsRevealPassword((prevState) => !prevState);
@@ -27,26 +29,8 @@ const LoginForm = () => {
       const byte = (hashWords[Math.floor(i / 4)] >> (8 * (3 - (i % 4)))) & 0xff;
       hashpassword += byte.toString();
     }
-    
-    try {
-      const res = await postLogin(username, hashpassword);
-      if (res) {
-        localStorage.clear();
-        localStorage.setItem('@token',JSON.stringify({token}));
-        navigate('calendar');
-      }
-    } catch (error) {
-      setError("Tên đăng nhập hoặc mật khẩu sai");
-    }
+    login(username,hashpassword)
   }
-
-  useEffect(() => {
-     const token = localStorage.getItem('@token');
-     if (token) {
-       navigate('calendar');
-     }
-    //localStorage.getItem('@token');
-  }, [navigate]);
 
   return (
   <div className="flex items-center justify-center min-h-screen overflow-hidden">
@@ -74,11 +58,10 @@ const LoginForm = () => {
                 </span>
               </div> 
           </div>
-          {error && (
-              <p role="alert" className="flex items-center gap-1 text-red-500 text-sm mb-4">
-                <span><AiFillExclamationCircle /></span>{error}
+
+            <p role="alert" className="flex items-center gap-1 text-red-500 text-sm mb-4">
+                <span>{errors}</span>
               </p>
-            )}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
