@@ -7,7 +7,7 @@ export const postLogin = async(UserName: string,PassWord: string) => {
     const data = {UserName,PassWord};
     const url = apiRouter.login;
     try{
-        const res = await axiosClient.post(url,data);
+        const res = await axiosClient.post<ILogin>(url,data);
         return res.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {

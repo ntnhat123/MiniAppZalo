@@ -3,9 +3,19 @@ import { getCalendar } from "api/Calendar";
 import { ICalendar } from "model/Calendar";
 import { FaRegStickyNote } from "react-icons/fa";
 import PopupNote from "components/Popup/PopupNote";
+import { getLichTruc } from "api/LichTruc";
+import { ILichTruc } from "model/LichTruc";
+import { useNavigate } from "react-router-dom";
+import LogoImage from 'logo.jpg'
+import { FaSearch } from "react-icons/fa";
+import { FiUser } from "react-icons/fi";
+import { useAuth } from "context/authContext";
 
 const CalendarPage = () => {
+    const navigate = useNavigate();
+    const {user} = useAuth();
     const [list, setList] = useState<ICalendar[]>([]);
+    const [lichtruc, setLichtruc] = useState<ILichTruc[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -18,6 +28,7 @@ const CalendarPage = () => {
 
     useEffect(() => {
         fetchCalendar();
+        fetchLichTruc();
     }, []);
 
     const fetchCalendar = useCallback(async () => {
@@ -28,6 +39,15 @@ const CalendarPage = () => {
             setError('Error fetching data');
         } finally {
             setLoading(false);
+        }
+    }, []);
+
+    const fetchLichTruc = useCallback(async () => {
+        try {
+            const res = await getLichTruc();
+            setLichtruc(res.data);
+        } catch (error) {
+            setError('Error fetching lichtruc data');
         }
     }, []);
 
@@ -112,35 +132,47 @@ const CalendarPage = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center p-4">
-            <h1 className="text-2xl font-bold mb-4">LỊCH THEO DÕI HỆ THỐNG</h1>
-            <div className="flex justify-between mb-4">
-                <form onSubmit={handleSearch} className="flex justify-between items-center gap-4">
-                    <input type="text" value={searchList} onChange={handleInputChangeSearch} className="rounded-lg px-4 py-2 h-full outline-none" placeholder="Tìm kiếm..." />
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg focus:outline-none">
-                        Tìm kiếm
-                    </button>
-                </form>
+        <div className="min-h-screen flex flex-col items-center p-4 ">
+            <div className="flex w-full justify-between items-center xl:px-[250px] pb-5">
+                <div className="flex items-center">
+                    <h1 className="text-xl font-serif">{user ? user?.FullName : 'LỊCH THEO DÕI DC'}</h1>
+                </div>
+                
+                <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>
+                    <FiUser className="text-2xl" />
+                </div>
             </div>
-            <div className="mb-4 w-full max-w-md items-center justify-center flex space-x-2">
-                <select onChange={handleDayChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg">
-                    <option value="">Ngày</option>
-                    {[...new Set(list.map(item => item.NgayTheoDoiHeThong))].map((day, index) => (
-                        <option key={index} value={day}>{day}</option>
-                    ))}
-                </select>
-                <select onChange={handleMonthChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg" value={selectedMonth || ""}>
-                    <option value="">Tháng</option>
-                    {[...new Set(list.map(item => item.ThangTheoDoiHeThong))].map((month, index) => (
-                        <option key={index} value={month}>{month}</option>
-                    ))}
-                </select>
-                <select onChange={handleYearChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg" value={selectedYear || ""} >
-                    <option value="">Năm</option>
-                    {[...new Set(list.map(item => item.NamTheoDoiHeThong))].map((year, index) => (
-                        <option key={index} value={year}>{year}</option>
-                    ))}
-                </select>
+            <div className="bg-white px-10 py-5 mb-5 rounded-xl">
+                <div className="relative mb-5">
+                    <form onSubmit={handleSearch} >
+                        <input placeholder="Tìm kiếm . . ."  type="text"  value={searchList} onChange={handleInputChangeSearch}
+                            className="w-full px-3 py-2 bg-transparent border-gray-300 focus:outline-none 
+                            focus:ring-2 focus:ring-transparent pr-10 border-b-2" />
+                        <button role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" type="submit">
+                            <FaSearch />
+                        </button>
+                    </form>
+                </div> 
+                <div className="w-full max-w-md items-center justify-center flex space-x-2 rounded-md">
+                    <select onChange={handleDayChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg">
+                        <option value="">Ngày</option>
+                        {[...new Set(list.map(item => item.NgayTheoDoiHeThong))].map((day, index) => (
+                            <option key={index} value={day}>{day}</option>
+                        ))}
+                    </select>
+                    <select onChange={handleMonthChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg" value={selectedMonth || ""}>
+                        <option value="">Tháng</option>
+                        {[...new Set(list.map(item => item.ThangTheoDoiHeThong))].map((month, index) => (
+                            <option key={index} value={month}>{month}</option>
+                        ))}
+                    </select>
+                    <select onChange={handleYearChange} className="bg-white p-2 border text-xl shadow-lg rounded-lg" value={selectedYear || ""} >
+                        <option value="">Năm</option>
+                        {[...new Set(list.map(item => item.NamTheoDoiHeThong))].map((year, index) => (
+                            <option key={index} value={year}>{year}</option>
+                        ))}
+                    </select>
+                </div>
             </div>
             <div className="w-full max-w-4xl">
                 <div className="flex justify-between items-center md:text-2xl font-bold">
@@ -169,8 +201,11 @@ const CalendarPage = () => {
                 })}
             </div>
             {openNote && selectedItem && (
-                <PopupNote handleClose={handleClose} list={selectedItem}/>
+                <PopupNote lichtruc={lichtruc} handleClose={handleClose} list={selectedItem} />
             )}
+            <button className="bg-gray-700 text-white px-4 py-2 rounded-lg mt-4" onClick={() => {navigate('/role')}}>
+                Role
+            </button>
         </div>
     );
 };

@@ -3,24 +3,26 @@ import { Route } from "react-router-dom";
 import { App, ZMPRouter, AnimationRoutes, SnackbarProvider, Calendar } from "zmp-ui";
 import { RecoilRoot } from "recoil";
 import HomePage from "pages/index";
-import User from "pages/user";
-import CalendarrPage from "pages/calendar";
-import CalendarPage from "./Home/Calendar";
-import StatusList from "./ReportStatus/ReportStatus";
-import CategoryTask from "./ReportStatus/CategoryTask";
+import { AuthProvider } from "context/authContext";
+import LoginPage from "pages/login";
+import RolePage from "pages/role";
+import UserPage from "pages/user";
 
 const MyApp = () => {
   return (
     <RecoilRoot>
       <App>
         <SnackbarProvider>
-          <ZMPRouter>
-            <AnimationRoutes>
-              {/* <Route path="/" element={<HomePage/>}></Route> */}
-              <Route path="/" element={<CategoryTask/>}></Route>
-              <Route path="/user" element={<User></User>}></Route>
-            </AnimationRoutes>
-          </ZMPRouter>
+            <ZMPRouter>
+              <AuthProvider>
+                  <AnimationRoutes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/profile" element={<UserPage />}  />
+                    <Route path="/role" element={<RolePage />} />
+                  </AnimationRoutes>
+              </AuthProvider>
+            </ZMPRouter>
         </SnackbarProvider>
       </App>
     </RecoilRoot>
