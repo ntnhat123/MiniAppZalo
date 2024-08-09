@@ -135,7 +135,7 @@ const CalendarPage = () => {
         <div className="min-h-screen flex flex-col items-center p-4 ">
             <div className="flex w-full justify-between items-center xl:px-[250px] pb-5">
                 <div className="flex items-center">
-                    <h1 className="text-xl font-serif">LỊCH THEO DÕI DC</h1>
+                    <h1 className="text-xl font-serif">{user ? user?.FullName : 'LỊCH THEO DÕI DC'}</h1>
                 </div>
                 
                 <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>

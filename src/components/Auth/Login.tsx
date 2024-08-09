@@ -47,7 +47,7 @@ const LoginForm = () => {
                   value={username} 
                   onChange={(e) => setUsername(e.target.value)} 
                   placeholder='Nhập tên người dùng...' 
-                  className="w-full pl-10 px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  className="w-full pl-10 px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-transparent" 
                   required 
                 />
               </div>
@@ -58,7 +58,7 @@ const LoginForm = () => {
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
                   <FaLock className="text-gray-500" />
                 </span>
-                <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Nhập mật khẩu...' className="w-full pl-10 px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 border-b-2" required type={isRevealPassword ? 'text' : 'password'} />
+                <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Nhập mật khẩu...' className="w-full pl-10 px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-transparent pr-10 border-b-2" required type={isRevealPassword ? 'text' : 'password'} />
                 <span onClick={togglePassword} role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
                   {isRevealPassword ? 
                     <FaEyeSlash />
