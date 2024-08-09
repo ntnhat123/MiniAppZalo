@@ -8,12 +8,14 @@ interface IAuthContext {
     login: (UserName: string, PassWord: string) => void;
     user: ILogin | null;
     errors: string;
+    logout: () => void;
 }
 
 const AuthContext = createContext<IAuthContext>({
     login: () => {},
-    user: null,
+    user: {} as ILogin,
     errors: '',
+    logout: () => {},
 });
 
 interface AuthProviderProps {
@@ -45,12 +47,20 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setUser(JSON.parse(storedUser));
             navigate('/');
         }
-    }, [navigate]);
+        // localStorage.getItem('@user');
+    }, []);
 
+    const logout = async () => {
+        localStorage.removeItem('@user');
+        localStorage.removeItem('@token');
+        setUser(null);
+        navigate('/');
+    };
     const AuthContextValue: IAuthContext = {
         login,
         user,
-        errors
+        errors,
+        logout,
     };
 
     return (

@@ -1,20 +1,15 @@
-import { postLogin } from 'api/Login';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import CryptoJS, { SHA1 } from 'crypto-js';
 import LogoImage from 'logo.jpg'
 import { IoEyeSharp } from "react-icons/io5";
-import { AiFillExclamationCircle } from "react-icons/ai";
-import { FaEyeSlash } from "react-icons/fa";
-import { token } from 'lib/api/apiRouter';
+import { FaEyeSlash,FaUser,FaLock } from "react-icons/fa";
 import { useAuth } from 'context/authContext';
+import { RiErrorWarningFill } from 'react-icons/ri';
 
 const LoginForm = () => {
-  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isRevealPassword, setIsRevealPassword] = useState(false);
-  const [error,setError] = useState('');
   const {login,errors} = useAuth();
 
   const togglePassword = () => {
@@ -41,14 +36,29 @@ const LoginForm = () => {
       <div className="bg-white md:p-6 p-7 md:m-1 m-4 rounded-2xl shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-4 text-center">Đăng Nhập</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Tên đăng nhập</label>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder='Nhập tên người dùng...'className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          <div className="mb-4 relative">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Tên đăng nhập</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <FaUser className="text-gray-500" />
+                </span>
+                <input 
+                  type="text" 
+                  value={username} 
+                  onChange={(e) => setUsername(e.target.value)} 
+                  placeholder='Nhập tên người dùng...' 
+                  className="w-full pl-10 px-3 py-2 border-b-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  required 
+                />
+              </div>
           </div>
           <div className="mb-4 relative">
               <label className="block text-gray-700 text-sm font-bold mb-2">Mật khẩu</label>
               <div className="relative">
-                <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Nhập mật khẩu...' className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10" required type={isRevealPassword ? 'text' : 'password'} />
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <FaLock className="text-gray-500" />
+                </span>
+                <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Nhập mật khẩu...' className="w-full pl-10 px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 border-b-2" required type={isRevealPassword ? 'text' : 'password'} />
                 <span onClick={togglePassword} role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
                   {isRevealPassword ? 
                     <FaEyeSlash />
@@ -59,9 +69,11 @@ const LoginForm = () => {
               </div> 
           </div>
 
+          {errors && (
             <p role="alert" className="flex items-center gap-1 text-red-500 text-sm mb-4">
-                <span>{errors}</span>
-              </p>
+              <RiErrorWarningFill /> {errors}
+            </p>
+          )}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"

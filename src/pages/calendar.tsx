@@ -6,10 +6,8 @@ import Login from "components/Auth/Login";
 const CalendarrPage: React.FunctionComponent = () => {
   const navigate = useNavigate();
   return (
-    <Page className="page">
-      <div>
+    <Page >
         <CalendarPage />
-      </div>
     </Page>
   );
 };

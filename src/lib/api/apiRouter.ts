@@ -8,5 +8,6 @@ export const apiRouter ={
     ReportStatus: `/api/${token}/ReportStatus`,
     CategoryTask: `/api/${token}/DanhMucNhiemVu`,
     lichtruc: `/api/${token}/Calendar`,
-    themghichu: `/api/${token}/LogCalendar`
+    themghichu: `/api/${token}/LogCalendar`,
+    role: `api/${token}/UserRole`
 }

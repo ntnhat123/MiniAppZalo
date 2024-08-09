@@ -1,5 +1,5 @@
 import { getCategoryTask } from "api/CategoryTask";
-import { getLichTruc, postLogCalendar } from "api/LichTruc";
+import { postLogCalendar } from "api/LichTruc";
 import { getReportStatus } from "api/ReportStatus";
 import { useAuth } from "context/authContext";
 import { ICalendar } from "model/Calendar";
@@ -9,24 +9,24 @@ import { ILogCalendar } from "model/LogCalendar";
 import { IReportStatus } from "model/ReportStatus";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { IoCloseSharp } from "react-icons/io5";
 
 interface IProps {
     list: ICalendar;
-    // lichtruc: ILichTruc;
     lichtruc: ILichTruc[];
     handleClose: () => void;
 }
 
-const PopupNote = ({ list,handleClose,lichtruc }: IProps) => {
+const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
   const [statusData, setStatusData] = useState<IReportStatus[]>([]);
   const { user } = useAuth();
   const [tasks, setTasks] = useState<ICategoryTask[]>([]);
 
-  const [logCalendar,setLogCalendar] = useState<ILogCalendar>({
+  const [logCalendar, setLogCalendar] = useState<ILogCalendar>({
     LogID: 0,
     LichID: lichtruc.map(item => item.LichID).join(','),
     NguoiTao: user?.UserID || '',
-    NgayTao:  new Date().toISOString(),
+    NgayTao: new Date().toISOString(),
     ThoiGian: '',
     GhiChu: '',
     NguyenNhan: '',
@@ -35,8 +35,7 @@ const PopupNote = ({ list,handleClose,lichtruc }: IProps) => {
     DanhMucNhiemVuID: '',
     StatusID: '',
     FileName: '',
-  })
-  
+  });
 
   const fetchTasks = async () => {
     try {
@@ -56,15 +55,15 @@ const PopupNote = ({ list,handleClose,lichtruc }: IProps) => {
     }
   };
 
-  useEffect(()=>{
-    fetchStatus()
-    fetchTasks()
-  },[])
+  useEffect(() => {
+    fetchStatus();
+    fetchTasks();
+  }, []);
 
-
-  if(!user){
-    return <Navigate to="/login" />
+  if (!user) {
+    return <Navigate to="/login" />;
   }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setLogCalendar({
@@ -73,10 +72,10 @@ const PopupNote = ({ list,handleClose,lichtruc }: IProps) => {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       await postLogCalendar(logCalendar);
-      console.log(postLogCalendar)
       handleClose();
     } catch (error) {
       console.error('Error saving log:', error);
@@ -84,16 +83,16 @@ const PopupNote = ({ list,handleClose,lichtruc }: IProps) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl">
-        <div className="border-b px-4 py-2 flex justify-between items-center">
+    <div className="fixed inset-0 flex items-end md:items-center justify-center" onClick={handleClose}>
+      <div className="bg-white rounded-t-3xl w-full md:w-1/3 p-10 px-3" onClick={(e) => e.stopPropagation()}>
+        <div className="border-b px-4 py-2 flex items-center justify-between">
           <h3 className="text-lg font-semibold">NHẬT KÝ THEO DÕI HỆ THỐNG DATA CENTER</h3>
-          <button className="text-black" onClick={handleClose}>
-            &times;
+          <button className="font-bold" onClick={handleClose}>
+            <IoCloseSharp />
           </button>
         </div>
 
-        <form action="">
+        <form onSubmit={handleSubmit}>
           <div className="p-4 max-h-96 overflow-y-auto">
             <div className="min-w-full">
               <div className="mb-4 flex flex-col md:flex-row md:items-center">
@@ -141,7 +140,7 @@ const PopupNote = ({ list,handleClose,lichtruc }: IProps) => {
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Nhật ký</label>
                 <textarea
                   onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border rounded w-full md:h-20 h-28 md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="GhiChu"
                   required
                   value={logCalendar.GhiChu}
@@ -202,7 +201,6 @@ const PopupNote = ({ list,handleClose,lichtruc }: IProps) => {
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-              onSubmit={handleSubmit}
             >
               Lưu nhật ký
             </button>
