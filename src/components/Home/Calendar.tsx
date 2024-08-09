@@ -9,9 +9,11 @@ import { useNavigate } from "react-router-dom";
 import LogoImage from 'logo.jpg'
 import { FaSearch } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
+import { useAuth } from "context/authContext";
 
 const CalendarPage = () => {
     const navigate = useNavigate();
+    const {user} = useAuth();
     const [list, setList] = useState<ICalendar[]>([]);
     const [lichtruc, setLichtruc] = useState<ILichTruc[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -136,7 +138,7 @@ const CalendarPage = () => {
                     <h1 className="text-xl font-serif">LỊCH THEO DÕI DC</h1>
                 </div>
                 
-                <div className="flex items-center justify-center" onClick={() => navigate('/profile')}>
+                <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>
                     <FiUser className="text-2xl" />
                 </div>
             </div>
