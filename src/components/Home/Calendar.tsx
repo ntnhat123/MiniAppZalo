@@ -133,7 +133,7 @@ const CalendarPage = () => {
 
     return (
         <div className="min-h-screen flex flex-col items-center p-4 ">
-            <div className="flex w-full justify-between items-center xl:px-[250px] pb-5">
+            <div className="flex w-full justify-between items-center xl:px-[500px] pb-5">
                 <div className="flex items-center">
                     <h1 className="text-xl font-serif">{user ? user?.FullName : 'LỊCH THEO DÕI DC'}</h1>
                 </div>
@@ -203,9 +203,6 @@ const CalendarPage = () => {
             {openNote && selectedItem && (
                 <PopupNote lichtruc={lichtruc} handleClose={handleClose} list={selectedItem} />
             )}
-            <button className="bg-gray-700 text-white px-4 py-2 rounded-lg mt-4" onClick={() => {navigate('/role')}}>
-                Role
-            </button>
         </div>
     );
 };

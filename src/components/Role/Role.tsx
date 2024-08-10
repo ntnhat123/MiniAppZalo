@@ -7,10 +7,10 @@ const Role = () => {
   const { user,roles } = useAuth();
   const [checkRole, setCheckRole] = useState<IRole>({
     UserRoleID: '',
-    UserID: user?.UserID || '',
+    UserID:  '',
     RoleID: ''
   });
-  const [response, setResponse] = useState<IRole | null>(null);
+  const [response, setResponse] = useState<IRole[] | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,7 +23,11 @@ const Role = () => {
   const handleClick = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await postRole(checkRole);
+      const roleRes = await postRole(checkRole);
+      if (roleRes && roleRes.data) {
+          setResponse(roleRes.data);
+          localStorage.setItem('@roles', JSON.stringify(roleRes.data));
+      }
     } catch (error) {
       console.error('Error saving log:', error);
     }
@@ -43,12 +47,30 @@ const Role = () => {
         Check
       </button>
       
-      {response && (
-        <div>
-          <h1>Role ID: {response.RoleID}</h1>
-          <h1>User Role ID: {response.UserRoleID}</h1>
-        </div>
-      )}
+      {response && response.length > 0 && (
+                        <div>
+                            {response.map((res, index) => (
+                                <div key={index} className=" border rounded">
+                                    <div>
+                                        <label className="block text-gray-600 font-semibold mb-2">RoleID</label>
+                                        <input 
+                                            type="email" 
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                            value={res?.RoleID} 
+                                            readOnly 
+                                        />
+                                        <label className="block text-gray-600 font-semibold mb-2">User RoleID</label>
+                                        <input 
+                                            type="email" 
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                            value={res?.UserRoleID} 
+                                            readOnly 
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
     </div>
   );
 };

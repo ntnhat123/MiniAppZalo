@@ -21,7 +21,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
   const [statusData, setStatusData] = useState<IReportStatus[]>([]);
   const { user } = useAuth();
   const [tasks, setTasks] = useState<ICategoryTask[]>([]);
-
+  const [checkDay,setCheckDay] = useState('');
   const [logCalendar, setLogCalendar] = useState<ILogCalendar>({
     LogID: 0,
     LichID: lichtruc.map(item => item.LichID).join(','),
@@ -72,71 +72,84 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     });
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await postLogCalendar(logCalendar);
-      handleClose();
+
+        const event = new Date(logCalendar.NgaySuKien);
+        const today = new Date();
+        if(event > today){
+          setCheckDay('Ngày sự kiện không thể lớn hơn ngày hiện tại');
+        }
+        console.log(logCalendar)
+        // const res = await postLogCalendar(logCalendar);
+        // if(res){
+        //   handleClose();
+        // }
     } catch (error) {
       console.error('Error saving log:', error);
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-end md:items-center justify-center" onClick={handleClose}>
-      <div className="bg-white rounded-t-3xl w-full md:w-1/3 p-10 px-3" onClick={(e) => e.stopPropagation()}>
-        <div className="border-b px-4 py-2 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">NHẬT KÝ THEO DÕI HỆ THỐNG DATA CENTER</h3>
-          <button className="font-bold" onClick={handleClose}>
-            <IoCloseSharp />
-          </button>
-        </div>
-
+    <div className="flex flex-col fixed inset-0 bg-white items-center justify-center rounded-t-3xl max-w-4xl w-full p-10 px-3 mx-auto md:max-h-fit">
+      <div className="border-b px-4 py-2 w-full flex items-center justify-between">
+        <h3 className="text-lg font-semibold">NHẬT KÝ THEO DÕI HỆ THỐNG DATA CENTER</h3>
+        <button className="font-bold" onClick={handleClose}>
+          <IoCloseSharp />
+        </button>
+      </div>
+      <div className="flex-grow overflow-auto px-5">
         <form onSubmit={handleSubmit}>
-          <div className="p-4 max-h-96 overflow-y-auto">
-            <div className="min-w-full">
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
-                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Người theo dõi hệ thống hiện tại</label>
-                <input
-                  className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="text"
-                  readOnly
-                  value={list.NguoiTheoDoiHeThong}
-                />
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
-                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Người ghi nhật ký</label>
-                <input
-                  className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="text"
-                  readOnly
-                  value={user?.FullName}
-                />
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
-                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thời gian ghi nhật ký</label>
-                <input
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="text"
-                  name="NgayTao"
-                  value={logCalendar.NgayTao}
-                />
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-start">
-                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày sự kiện/Nhật ký</label>
-                <div className="md:w-2/3">
-                  <input
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    name="NgaySuKien"
-                    value={logCalendar.NgaySuKien}
-                  />
-                  <small className="text-gray-500 block mt-1">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
-                </div>
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
+            <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Người theo dõi hệ thống hiện tại</label>
+            <input
+              className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              readOnly
+              value={list.NguoiTheoDoiHeThong}
+            />
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
+            <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Người ghi nhật ký</label>
+            <input
+              className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              readOnly
+              value={user?.FullName}
+            />
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
+            <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thời gian ghi nhật ký</label>
+            <input
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              name="NgayTao"
+              value={logCalendar.NgayTao}
+            />
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-start">
+            <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày sự kiện/Nhật ký</label>
+            <div className="md:w-2/3">
+              <input
+                onChange={handleChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="date"
+                name="NgaySuKien"
+                value={logCalendar.NgaySuKien}
+              />
+              <small className="text-gray-500 block mt-1">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
+              {
+                checkDay && 
+                <h1 className="text-red-500 font-bold">
+                  {checkDay}
+                </h1>
+              }
+            </div>
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Nhật ký</label>
                 <textarea
                   onChange={handleChange}
@@ -145,8 +158,8 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                   required
                   value={logCalendar.GhiChu}
                 />
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ghi chú</label>
                 <textarea
                   onChange={handleChange}
@@ -155,8 +168,8 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                   placeholder="Nhập ghi chú nếu có sự cố xảy ra"
                   value={logCalendar.NguyenNhan}
                 />
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thuộc nhiệm vụ</label>
                 <select
                   onChange={handleChange}
@@ -170,8 +183,8 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                     <option key={index} value={task.DanhMucNhiemVuID}>{task.DanhMucNhiemVuName}</option>
                   ))}
                 </select>
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Tình trạng</label>
                 <select
                   onChange={handleChange}
@@ -185,8 +198,8 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                     <option key={index} value={status.StatusID}>{status.StatusName}</option>
                   ))}
                 </select>
-              </div>
-              <div className="mb-4 flex flex-col md:flex-row md:items-center">
+          </div>
+          <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">File</label>
                 <input
                   onChange={handleChange}
@@ -194,8 +207,6 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                   type="file"
                   name="FileTep"
                 />
-              </div>
-            </div>
           </div>
           <div className="border-t px-4 py-2 flex justify-end">
             <button
