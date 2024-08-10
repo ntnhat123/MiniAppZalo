@@ -10,6 +10,7 @@ import { IReportStatus } from "model/ReportStatus";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { IoCloseSharp } from "react-icons/io5";
+import { RiErrorWarningFill } from "react-icons/ri";
 
 interface IProps {
     list: ICalendar;
@@ -21,7 +22,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
   const [statusData, setStatusData] = useState<IReportStatus[]>([]);
   const { user } = useAuth();
   const [tasks, setTasks] = useState<ICategoryTask[]>([]);
-  const [checkDay,setCheckDay] = useState('');
+  const [checkDay,setCheckDay] = useState<string>('');
   const [logCalendar, setLogCalendar] = useState<ILogCalendar>({
     LogID: 0,
     LichID: lichtruc.map(item => item.LichID).join(','),
@@ -66,6 +67,17 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
+    if(name === "NgaySuKien"){
+      const eventDate = new Date(value);
+      const today = new Date();
+      if(eventDate > today){
+        setCheckDay("Ngày Sự Kiện Không Thể Lớn Hơn Ngày Hiện Tại.");
+      }else{
+        setCheckDay("");
+      }
+    }
+    
     setLogCalendar({
       ...logCalendar,
       [name]: value
@@ -75,25 +87,21 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (checkDay) {
+      return;
+    }
     try {
-
-        const event = new Date(logCalendar.NgaySuKien);
-        const today = new Date();
-        if(event > today){
-          setCheckDay('Ngày sự kiện không thể lớn hơn ngày hiện tại');
+        const res = await postLogCalendar(logCalendar);
+        if(res){
+          handleClose();
         }
-        console.log(logCalendar)
-        // const res = await postLogCalendar(logCalendar);
-        // if(res){
-        //   handleClose();
-        // }
     } catch (error) {
       console.error('Error saving log:', error);
     }
   };
 
   return (
-    <div className="flex flex-col fixed inset-0 bg-white items-center justify-center rounded-t-3xl max-w-4xl w-full p-10 px-3 mx-auto md:max-h-fit">
+    <div className="flex flex-col fixed inset-0 bg-white items-center justify-center rounded-t-2xl md:rounded-3xl max-w-4xl w-full p-10 px-3 mx-auto md:max-h-fit">
       <div className="border-b px-4 py-2 w-full flex items-center justify-between">
         <h3 className="text-lg font-semibold">NHẬT KÝ THEO DÕI HỆ THỐNG DATA CENTER</h3>
         <button className="font-bold" onClick={handleClose}>
@@ -143,8 +151,8 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
               <small className="text-gray-500 block mt-1">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
               {
                 checkDay && 
-                <h1 className="text-red-500 font-bold">
-                  {checkDay}
+                <h1 className="flex items-center gap-1 text-red-500 font-bold">
+                  <RiErrorWarningFill />{checkDay}
                 </h1>
               }
             </div>
