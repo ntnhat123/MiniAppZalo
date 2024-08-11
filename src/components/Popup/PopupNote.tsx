@@ -72,7 +72,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
       const eventDate = new Date(value);
       const today = new Date();
       if(eventDate > today){
-        setCheckDay("Ngày Sự Kiện Không Thể Lớn Hơn Ngày Hiện Tại.");
+        setCheckDay("Ngày sự kiện không thể lớn hơn ngày hiện tại.");
       }else{
         setCheckDay("");
       }
@@ -108,7 +108,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
           <IoCloseSharp />
         </button>
       </div>
-      <div className="flex-grow overflow-auto px-5">
+      <div className="flex-grow overflow-auto px-3">
         <form onSubmit={handleSubmit}>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Người theo dõi hệ thống hiện tại</label>
@@ -143,17 +143,17 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
             <div className="md:w-2/3">
               <input
                 onChange={handleChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full max-h-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="date"
                 name="NgaySuKien"
                 value={logCalendar.NgaySuKien}
               />
-              <small className="text-gray-500 block mt-1">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
               {
-                checkDay && 
-                <h1 className="flex items-center gap-1 text-red-500 font-bold">
-                  <RiErrorWarningFill />{checkDay}
-                </h1>
+                  checkDay ? 
+                  <small className="flex items-center gap-1 text-red-500 font-bold">
+                    <RiErrorWarningFill />{checkDay}
+                  </small>: <small className="text-gray-500 block">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
+
               }
             </div>
           </div>
@@ -178,19 +178,24 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                 />
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
-                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thuộc nhiệm vụ</label>
-                <select
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  name="DanhMucNhiemVuID"
-                  required
-                  value={logCalendar.DanhMucNhiemVuID}
-                >
-                  <option value="">--Tất cả nhiệm vụ--</option>
-                  {tasks.map((task, index) => (
-                    <option key={index} value={task.DanhMucNhiemVuID}>{task.DanhMucNhiemVuName}</option>
-                  ))}
-                </select>
+            <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thuộc nhiệm vụ</label>
+            <select onChange={handleChange} className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline overflow-auto"
+              name="DanhMucNhiemVuID"
+              required
+              value={logCalendar.DanhMucNhiemVuID}
+              style={{
+                whiteSpace: 'nowrap',  
+                overflow: 'hidden',   
+                textOverflow: 'ellipsis', 
+              }}
+            >
+              <option value="">--Tất cả nhiệm vụ--</option>
+              {tasks.map((task, index) => (
+                <option key={index} value={task.DanhMucNhiemVuID}>
+                  {task.DanhMucNhiemVuName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Tình trạng</label>
