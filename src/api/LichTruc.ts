@@ -12,7 +12,6 @@ export const getLichTruc = async () => {
     }
 }
 
-
 export const postLogCalendar = async (lichTruc: ILogCalendar) => {
     try {
         const url = apiRouter.themghichu;

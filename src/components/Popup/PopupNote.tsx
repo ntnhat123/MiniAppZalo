@@ -11,12 +11,15 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { IoCloseSharp } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
+import { apiRouter } from "lib/api/apiRouter";
+import Select from "react-select";
 
 interface IProps {
     list: ICalendar;
     lichtruc: ILichTruc[];
     handleClose: () => void;
 }
+
 
 const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
   const [statusData, setStatusData] = useState<IReportStatus[]>([]);
@@ -36,7 +39,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     DanhMucNhiemVuID: '',
     StatusID: '',
     FileName: '',
-  });
+  }); 
 
   const fetchTasks = async () => {
     try {
@@ -83,8 +86,8 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
       [name]: value
     });
   };
-
-
+  
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (checkDay) {
@@ -92,6 +95,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     }
     try {
         const res = await postLogCalendar(logCalendar);
+        
         if(res){
           handleClose();
         }
@@ -100,6 +104,19 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     }
   };
 
+  const handleChangeSelect = (selectedOption) => {
+    setLogCalendar((prevLogCalendar) => ({
+      ...prevLogCalendar,
+      DanhMucNhiemVuID: selectedOption ? selectedOption.value : '',
+    }));
+  };
+
+  const options = tasks.map((task) => ({
+    value: task.DanhMucNhiemVuID,
+    label: task.DanhMucNhiemVuName,
+  }));
+
+  const selectedOption = options.find(option => option.value === logCalendar.DanhMucNhiemVuID) ?? null;
   return (
     <div className="flex flex-col fixed inset-0 bg-white items-center justify-center rounded-t-2xl md:rounded-3xl max-w-4xl w-full p-10 px-3 mx-auto md:max-h-fit">
       <div className="border-b px-4 py-2 w-full flex items-center justify-between">
@@ -176,10 +193,10 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                   placeholder="Nhập ghi chú nếu có sự cố xảy ra"
                   value={logCalendar.NguyenNhan}
                 />
-          </div>
+          </div>   
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thuộc nhiệm vụ</label>
-            <select onChange={handleChange} className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline overflow-auto"
+            {/* <select onChange={handleChange} className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline overflow-auto"
               name="DanhMucNhiemVuID"
               required
               value={logCalendar.DanhMucNhiemVuID}
@@ -195,7 +212,29 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                   {task.DanhMucNhiemVuName}
                 </option>
               ))}
-            </select>
+            </select> */}
+    <div className="w-full md:w-2/3">
+    <Select
+          options={options}
+          onChange={handleChangeSelect}
+          value={selectedOption}
+          placeholder="--Tất cả nhiệm vụ--"
+          isSearchable // Đảm bảo rằng thuộc tính này đã được bật
+          styles={{
+            control: (base) => ({
+              ...base,
+              boxShadow: 'none',
+            }),
+            menu: (base) => ({
+              ...base,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }),
+          }}
+        />
+    
+  </div>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Tình trạng</label>
