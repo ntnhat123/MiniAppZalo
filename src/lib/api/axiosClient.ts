@@ -6,7 +6,7 @@ const config: AxiosRequestConfig = {
     withCredentials: false,
     timeout: 1000 * 300,
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/x-www-form-urlencoded " ,
     }
 };
 
