@@ -103,7 +103,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
       console.error('Error saving log:', error);
     }
   };
-
+  
   const handleChangeSelect = (selectedOption) => {
     setLogCalendar((prevLogCalendar) => ({
       ...prevLogCalendar,
@@ -196,45 +196,28 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
           </div>   
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thuộc nhiệm vụ</label>
-            {/* <select onChange={handleChange} className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline overflow-auto"
-              name="DanhMucNhiemVuID"
-              required
-              value={logCalendar.DanhMucNhiemVuID}
-              style={{
-                whiteSpace: 'nowrap',  
-                overflow: 'hidden',   
-                textOverflow: 'ellipsis', 
-              }}
-            >
-              <option value="">--Tất cả nhiệm vụ--</option>
-              {tasks.map((task, index) => (
-                <option key={index} value={task.DanhMucNhiemVuID}>
-                  {task.DanhMucNhiemVuName}
-                </option>
-              ))}
-            </select> */}
-    <div className="w-full md:w-2/3">
-    <Select
-          options={options}
-          onChange={handleChangeSelect}
-          value={selectedOption}
-          placeholder="--Tất cả nhiệm vụ--"
-          isSearchable // Đảm bảo rằng thuộc tính này đã được bật
-          styles={{
-            control: (base) => ({
-              ...base,
-              boxShadow: 'none',
-            }),
-            menu: (base) => ({
-              ...base,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }),
-          }}
-        />
-    
-  </div>
+
+          <div className="w-full md:w-2/3">
+          <Select
+                options={options}
+                onChange={handleChangeSelect}
+                value={selectedOption}
+                placeholder="--Tất cả nhiệm vụ--"
+                isSearchable 
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    boxShadow: 'none',
+                  }),
+                  menu: (base) => ({
+                    ...base,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }),
+                }}
+              />
+          </div>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Tình trạng</label>
