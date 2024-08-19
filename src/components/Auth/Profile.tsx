@@ -17,7 +17,7 @@ const Profile = () => {
             authorize({
                 scopes: ["scope.userInfo"],
                 success: () => {
-                    localStorage.setItem('userAuthorized', 'true'); // Lưu trạng thái cấp quyền vào localStorage
+                    localStorage.setItem('userAuthorized', 'true');
                     getUserInfo({
                         autoRequestPermission: true, 
                         success: (profile) => {
@@ -74,14 +74,14 @@ const Profile = () => {
                         <input 
                             type="text" 
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            value={user?.FullName} 
+                            value={user?.FullName || ''} 
                             readOnly 
                         />
                     </div>
 
                     <div>
                         <label className="block text-gray-600 font-semibold mb-2">Tên đăng nhập</label>
-                        <input type="text" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value={user?.UserName} readOnly />
+                        <input type="text" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value={user?.UserName || ''}  readOnly />
                     </div>
 
                     <div>
@@ -89,7 +89,7 @@ const Profile = () => {
                         <input 
                             type="email" 
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            value={user?.EmailAddress} 
+                            value={user?.EmailAddress || ''} 
                             readOnly 
                         />
                     </div>
