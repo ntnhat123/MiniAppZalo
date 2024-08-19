@@ -10,25 +10,41 @@ const Profile = () => {
     const [avatar, setAvatar] = useState('https://via.placeholder.com/100');
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     authorize({
-    //         scopes: ["scope.userInfo"],
-    //         success: () => {
-    //             getUserInfo({
-    //             autoRequestPermission: true, 
-    //             success: (profile) => {
-    //                 setAvatar(profile.userInfo.avatar);
-    //             },
-    //             fail: (error) => {
-    //                 console.error('Lỗi khi lấy thông tin người dùng:', error);
-    //             }
-    //             });
-    //         },
-    //         fail: (error) => {
-    //             console.error('Cấp quyền thất bại:', error);
-    //         }
-    //     });
-    // }, []);
+    useEffect(() => {
+        const userAuthorized = localStorage.getItem('userAuthorized');
+    
+        if (!userAuthorized) {
+            authorize({
+                scopes: ["scope.userInfo"],
+                success: () => {
+                    localStorage.setItem('userAuthorized', 'true');
+                    getUserInfo({
+                        autoRequestPermission: true, 
+                        success: (profile) => {
+                            setAvatar(profile.userInfo.avatar);
+                        },
+                        fail: (error) => {
+                            console.error('Lỗi khi lấy thông tin người dùng:', error);
+                        }
+                    });
+                },
+                fail: (error) => {
+                    console.error('Cấp quyền thất bại:', error);
+                }
+            });
+        } else {
+            getUserInfo({
+                autoRequestPermission: true, 
+                success: (profile) => {
+                    setAvatar(profile.userInfo.avatar);
+                },
+                fail: (error) => {
+                    console.error('Lỗi khi lấy thông tin người dùng:', error);
+                }
+            });
+        }
+    }, []);
+    
 
     useEffect(() => {
         if (!user) {
