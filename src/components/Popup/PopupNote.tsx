@@ -200,11 +200,13 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
 
           <div className="w-full md:w-2/3">
           <Select
+                
                 options={options}
                 onChange={handleChangeSelect}
                 value={selectedOption}
                 placeholder="--Tất cả nhiệm vụ--"
                 isSearchable 
+                required
                 styles={{
                   control: (base) => ({
                     ...base,
