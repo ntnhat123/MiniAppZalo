@@ -11,10 +11,29 @@ const Profile = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        authorize({
-            scopes: ["scope.userInfo"],
-            success: () => {
-                getUserInfo({
+        const userAuthorized = localStorage.getItem('userAuthorized');
+    
+        if (!userAuthorized) {
+            authorize({
+                scopes: ["scope.userInfo"],
+                success: () => {
+                    localStorage.setItem('userAuthorized', 'true'); // Lưu trạng thái cấp quyền vào localStorage
+                    getUserInfo({
+                        autoRequestPermission: true, 
+                        success: (profile) => {
+                            setAvatar(profile.userInfo.avatar);
+                        },
+                        fail: (error) => {
+                            console.error('Lỗi khi lấy thông tin người dùng:', error);
+                        }
+                    });
+                },
+                fail: (error) => {
+                    console.error('Cấp quyền thất bại:', error);
+                }
+            });
+        } else {
+            getUserInfo({
                 autoRequestPermission: true, 
                 success: (profile) => {
                     setAvatar(profile.userInfo.avatar);
@@ -22,13 +41,10 @@ const Profile = () => {
                 fail: (error) => {
                     console.error('Lỗi khi lấy thông tin người dùng:', error);
                 }
-                });
-            },
-            fail: (error) => {
-                console.error('Cấp quyền thất bại:', error);
-            }
-        });
+            });
+        }
     }, []);
+    
 
     useEffect(() => {
         if (!user) {
