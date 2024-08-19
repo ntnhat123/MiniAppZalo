@@ -1,15 +1,18 @@
 import { postLogin } from "api/Login";
 import { postRole } from "api/Role";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ILogin } from "model/Login";
-import { IRole } from "model/Role"; 
+import { IRole } from "model/Role";
 import { token } from 'lib/api/apiRouter';
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 interface IAuthContext {
     login: (UserName: string, PassWord: string) => void;
     user: ILogin | null;
-    roles: IRole[] | null; 
+    roles: IRole[] | null;
     errors: string;
     logout: () => void;
 }
@@ -17,7 +20,7 @@ interface IAuthContext {
 const AuthContext = createContext<IAuthContext>({
     login: () => {},
     user: null,
-    roles: null, 
+    roles: null,
     errors: '',
     logout: () => {},
 });
@@ -31,11 +34,26 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [errors, setError] = useState('');
     const [user, setUser] = useState<ILogin | null>(null);
     const [roles, setRoles] = useState<IRole[] | null>(null);
+    const logoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const startLogoutTimer = () => {
+        if (logoutTimer.current) {
+            clearTimeout(logoutTimer.current);
+        }
+        logoutTimer.current = setTimeout(() => {
+            logout();
+        }, 900000);
+    };
+
+    const resetLogoutTimer = () => {
+        startLogoutTimer();
+    };
 
     const login = async (UserName: string, PassWord: string) => {
         try {
             const res = await postLogin(UserName, PassWord);
             if (res) {
+                setError('');
                 setUser(res);
                 localStorage.setItem('@user', JSON.stringify(res));
                 localStorage.setItem('@token', token);
@@ -45,10 +63,32 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     setRoles(roleRes.data);
                     localStorage.setItem('@roles', JSON.stringify(roleRes.data));
                 }
+                toast.success("Đăng nhập thành công",{ draggable: true});
+                startLogoutTimer();
                 navigate('/');
             }
         } catch (error) {
             setError("Tên đăng nhập hoặc mật khẩu sai");
+        }
+    };
+
+    const logout = () => {
+        if (logoutTimer.current) {
+            clearTimeout(logoutTimer.current);
+            localStorage.removeItem('@user');
+            localStorage.removeItem('@token');
+            localStorage.removeItem('@roles');
+            setUser(null);
+            setRoles(null);
+            navigate('/');
+        }else{
+            localStorage.removeItem('@user');
+            localStorage.removeItem('@token');
+            localStorage.removeItem('@roles');
+            setUser(null);
+            setRoles(null);
+            setError('');
+            navigate('/login');
         }
     };
 
@@ -60,18 +100,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (storedRoles) {
                 setRoles(JSON.parse(storedRoles));
             }
-            navigate('/');
+            startLogoutTimer();
         }
-    }, []);
 
-    const logout = async () => {
-        localStorage.removeItem('@user');
-        localStorage.removeItem('@token');
-        localStorage.removeItem('@roles');
-        setUser(null);
-        setRoles(null);
-        navigate('/');
-    };
+        const events = ['click', 'keydown', 'mousemove', 'scroll'];
+        events.forEach(event => window.addEventListener(event, resetLogoutTimer));
+
+        return () => {
+            events.forEach(event => window.removeEventListener(event, resetLogoutTimer));
+            if (logoutTimer.current) {
+                clearTimeout(logoutTimer.current);
+            }
+        };
+    }, []);
 
     const AuthContextValue: IAuthContext = {
         login,
@@ -84,6 +125,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return (
         <AuthContext.Provider value={AuthContextValue}>
             {children}
+            <ToastContainer /> 
         </AuthContext.Provider>
     );
 };

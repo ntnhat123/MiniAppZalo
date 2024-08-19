@@ -7,6 +7,8 @@ import { AuthProvider } from "context/authContext";
 import LoginPage from "pages/login";
 import RolePage from "pages/role";
 import UserPage from "pages/user";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const MyApp = () => {
   return (
@@ -21,6 +23,7 @@ const MyApp = () => {
                     <Route path="/profile" element={<UserPage />}  />
                     <Route path="/role" element={<RolePage />} />
                   </AnimationRoutes>
+                  <ToastContainer />
               </AuthProvider>
             </ZMPRouter>
         </SnackbarProvider>

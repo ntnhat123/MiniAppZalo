@@ -11,8 +11,9 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { IoCloseSharp } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
-import { apiRouter } from "lib/api/apiRouter";
 import Select from "react-select";
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 interface IProps {
     list: ICalendar;
@@ -95,12 +96,13 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     }
     try {
         const res = await postLogCalendar(logCalendar);
-        
         if(res){
+          toast.success("Lưu dữ liệu thành công",{ draggable: true});
           handleClose();
         }
+        console.log(logCalendar)
     } catch (error) {
-      console.error('Error saving log:', error);
+      toast.success("Lưu dữ liệu thất bại");
     }
   };
   

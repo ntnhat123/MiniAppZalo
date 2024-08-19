@@ -11,6 +11,7 @@ const Profile = () => {
             scopes: ["scope.userInfo"],
             success: () => {
                 getUserInfo({
+                autoRequestPermission: true, 
                 success: (profile) => {
                     setAvatar(profile.userInfo.avatar);
                 },
@@ -33,11 +34,6 @@ const Profile = () => {
         <div className="h-full flex flex-col items-center justify-center">
             <div className="w-full max-w-md rounded-lg p-6">
                 <div className="flex justify-center mb-6 relative">
-                    {/* <img 
-                        src="https://via.placeholder.com/100" 
-                        alt="User Profile" 
-                        className="w-24 h-24 rounded-full border-4 border-white shadow-md" 
-                    /> */}
                     <img 
                         src={avatar}
                         alt="User Profile" 
