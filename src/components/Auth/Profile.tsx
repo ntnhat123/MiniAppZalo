@@ -10,25 +10,25 @@ const Profile = () => {
     const [avatar, setAvatar] = useState('https://via.placeholder.com/100');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        authorize({
-            scopes: ["scope.userInfo"],
-            success: () => {
-                getUserInfo({
-                autoRequestPermission: true, 
-                success: (profile) => {
-                    setAvatar(profile.userInfo.avatar);
-                },
-                fail: (error) => {
-                    console.error('Lỗi khi lấy thông tin người dùng:', error);
-                }
-                });
-            },
-            fail: (error) => {
-                console.error('Cấp quyền thất bại:', error);
-            }
-        });
-    }, []);
+    // useEffect(() => {
+    //     authorize({
+    //         scopes: ["scope.userInfo"],
+    //         success: () => {
+    //             getUserInfo({
+    //             autoRequestPermission: true, 
+    //             success: (profile) => {
+    //                 setAvatar(profile.userInfo.avatar);
+    //             },
+    //             fail: (error) => {
+    //                 console.error('Lỗi khi lấy thông tin người dùng:', error);
+    //             }
+    //             });
+    //         },
+    //         fail: (error) => {
+    //             console.error('Cấp quyền thất bại:', error);
+    //         }
+    //     });
+    // }, []);
 
     useEffect(() => {
         if (!user) {
@@ -58,14 +58,14 @@ const Profile = () => {
                         <input 
                             type="text" 
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            value={user?.FullName} 
+                            value={user?.FullName || ''} 
                             readOnly 
                         />
                     </div>
 
                     <div>
                         <label className="block text-gray-600 font-semibold mb-2">Tên đăng nhập</label>
-                        <input type="text" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value={user?.UserName} readOnly />
+                        <input type="text" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value={user?.UserName || ''}  readOnly />
                     </div>
 
                     <div>
@@ -73,7 +73,7 @@ const Profile = () => {
                         <input 
                             type="email" 
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            value={user?.EmailAddress} 
+                            value={user?.EmailAddress || ''} 
                             readOnly 
                         />
                     </div>

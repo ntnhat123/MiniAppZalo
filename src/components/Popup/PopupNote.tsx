@@ -205,6 +205,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                 value={selectedOption}
                 placeholder="--Tất cả nhiệm vụ--"
                 isSearchable 
+                required
                 styles={{
                   control: (base) => ({
                     ...base,
