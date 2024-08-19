@@ -1,10 +1,14 @@
 import { useAuth } from 'context/authContext';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authorize,getUserInfo  } from "zmp-sdk/apis";
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
     const { user, roles, logout } = useAuth();
     const [avatar, setAvatar] = useState('https://via.placeholder.com/100');
+    const navigate = useNavigate();
 
     useEffect(() => {
         authorize({
@@ -24,9 +28,16 @@ const Profile = () => {
                 console.error('Cấp quyền thất bại:', error);
             }
         });
-      }, []);
+    }, []);
+
+    useEffect(() => {
+        if (!user) {
+          navigate('/', { replace: true });
+        }
+      }, [user, navigate]);
 
     const handleLogout = () => {
+        toast.success("Đăng xuất thành công!",{ autoClose: 1000,draggable: true});
         logout();
     };
 

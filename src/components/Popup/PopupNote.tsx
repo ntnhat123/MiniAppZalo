@@ -97,10 +97,9 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     try {
         const res = await postLogCalendar(logCalendar);
         if(res){
-          toast.success("Lưu dữ liệu thành công",{ draggable: true});
+          toast.success("Lưu dữ liệu thành công",{ autoClose: 1000,draggable: true});
           handleClose();
         }
-        console.log(logCalendar)
     } catch (error) {
       toast.success("Lưu dữ liệu thất bại");
     }

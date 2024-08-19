@@ -31,15 +31,19 @@ interface AuthProviderProps {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const navigate = useNavigate();
-    const [errors, setError] = useState('');
+    const [errors, setError] = useState<string>('');
     const [user, setUser] = useState<ILogin | null>(null);
     const [roles, setRoles] = useState<IRole[] | null>(null);
     const logoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const startLogoutTimer = () => {
+        const logoutTime = Date.now() + 900000;
+        localStorage.setItem('@logoutTime', logoutTime.toString());
+
         if (logoutTimer.current) {
             clearTimeout(logoutTimer.current);
         }
+
         logoutTimer.current = setTimeout(() => {
             logout();
         }, 900000);
@@ -56,14 +60,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 setError('');
                 setUser(res);
                 localStorage.setItem('@user', JSON.stringify(res));
-                localStorage.setItem('@token', token);
 
                 const roleRes = await postRole({ UserID: res.UserID } as IRole);
                 if (roleRes && roleRes.data) {
                     setRoles(roleRes.data);
                     localStorage.setItem('@roles', JSON.stringify(roleRes.data));
                 }
-                toast.success("Đăng nhập thành công",{ draggable: true});
+                toast.success("Đăng nhập thành công",{ autoClose: 1000,draggable: true});
                 startLogoutTimer();
                 navigate('/');
             }
@@ -75,32 +78,34 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const logout = () => {
         if (logoutTimer.current) {
             clearTimeout(logoutTimer.current);
-            localStorage.removeItem('@user');
-            localStorage.removeItem('@token');
-            localStorage.removeItem('@roles');
-            setUser(null);
-            setRoles(null);
-            navigate('/');
-        }else{
-            localStorage.removeItem('@user');
-            localStorage.removeItem('@token');
-            localStorage.removeItem('@roles');
-            setUser(null);
-            setRoles(null);
-            setError('');
-            navigate('/login');
         }
+        localStorage.removeItem('@user');
+        localStorage.removeItem('@roles');
+        localStorage.removeItem('@logoutTime');
+        setUser(null);
+        setRoles(null);
+        setError('');
+        navigate('/');
     };
 
     useEffect(() => {
         const storedUser = localStorage.getItem('@user');
         const storedRoles = localStorage.getItem('@roles');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-            if (storedRoles) {
-                setRoles(JSON.parse(storedRoles));
+        const storedLogoutTime = localStorage.getItem('@logoutTime');
+
+        if (storedUser && storedLogoutTime) {
+            const currentTime = Date.now();
+            const logoutTime = parseInt(storedLogoutTime, 10);
+
+            if (currentTime >= logoutTime) {
+                logout();
+            } else {
+                setUser(JSON.parse(storedUser));
+                if (storedRoles) {
+                    setRoles(JSON.parse(storedRoles));
+                }
+                startLogoutTimer();
             }
-            startLogoutTimer();
         }
 
         const events = ['click', 'keydown', 'mousemove', 'scroll'];
