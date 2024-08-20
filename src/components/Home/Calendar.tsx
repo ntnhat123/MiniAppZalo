@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getCalendar } from "api/Calendar";
 import { ICalendar } from "model/Calendar";
-import { FaRegStickyNote } from "react-icons/fa";
 import PopupNote from "components/Popup/PopupNote";
 import { getLichTruc } from "api/LichTruc";
 import { ILichTruc } from "model/LichTruc";
 import { useNavigate } from "react-router-dom";
-import LogoImage from 'logo.jpg'
-import { FaSearch } from "react-icons/fa";
+import { FaSearch,FaRegStickyNote } from "react-icons/fa";
+import { AiOutlineFileProtect } from "react-icons/ai";
 import { FiUser } from "react-icons/fi";
 import { useAuth } from "context/authContext";
 
@@ -137,9 +136,13 @@ const CalendarPage = () => {
                 <div className="flex items-center">
                     <h1 className="text-xl font-serif">{user ? user?.FullName : 'LỊCH THEO DÕI DC'}</h1>
                 </div>
-                
-                <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>
-                    <FiUser className="text-2xl" />
+                <div className="flex gap-5">
+                    <div className="flex items-center justify-center" onClick={() => user ? navigate('/listcalendar') : navigate('/login')}>
+                        <AiOutlineFileProtect  className="text-2xl" />
+                    </div>
+                    <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>
+                        <FiUser className="text-2xl" />
+                    </div>
                 </div>
             </div>
             <div className="bg-white px-10 py-5 mb-5 rounded-xl">

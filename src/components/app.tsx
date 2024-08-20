@@ -9,6 +9,7 @@ import RolePage from "pages/role";
 import UserPage from "pages/user";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import ListCalendarUser from "./ListCalendarUser/ListCalendarUser";
 
 const MyApp = () => {
   return (
@@ -22,6 +23,7 @@ const MyApp = () => {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/profile" element={<UserPage />}  />
                     <Route path="/role" element={<RolePage />} />
+                    <Route path="/listcalendar" element={<ListCalendarUser />} />
                   </AnimationRoutes>
                   <ToastContainer />
               </AuthProvider>

@@ -9,7 +9,6 @@ const Profile = () => {
     const { user, roles, logout } = useAuth();
     const [avatar, setAvatar] = useState('https://via.placeholder.com/100');
     const navigate = useNavigate();
-
     useEffect(() => {
         const userAuthorized = localStorage.getItem('userAuthorized');
     
