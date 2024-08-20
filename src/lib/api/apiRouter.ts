@@ -10,7 +10,8 @@ export const apiRouter ={
     lichtruc: `/api/${token}/Calendar`,
     themghichu: `/api/${token}/LogCalendar`,
     role: `api/${token}/UserRole`,
-    listCalendar: `api/${token}/ListCalendar`
-    // listCalendar: `api/${token}/ListCalendar/16`
+    listCalendar: `api/${token}/ListCalendar`,
+    // listCalendar: `api/${token}/ListCalendar/16`,
+    editCalendar: `api/${token}/EditCalendar`
 
 }
