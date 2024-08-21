@@ -13,11 +13,12 @@ const ListCalendarUser = () => {
     const fetchCalendar = useCallback(async () => {
         try {
             const listCalendar = await getListCalendarUser(Number(userIds));
-            setListCalendar(listCalendar[0].data);
+            setListCalendar(listCalendar.data);
+            console.log(listCalendar.data)
         } catch (error) {
             throw(error);
         }
-    }, []);
+    }, [userIds]);
 
     useEffect(() => {
         fetchCalendar();
