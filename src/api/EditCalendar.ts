@@ -1,11 +1,11 @@
 import axiosClient from "lib/api/axiosClient";
 import { apiRouter } from "lib/api/apiRouter";  
-import { IListCalendar } from "model/IListCalendarUser";
+import { IEditCalendar } from "model/IEditCalendar";
 
-export const getListCalendarUser = async (LogID: number) => {
+export const getEditCalendarUser = async (LogID: number) => {
     try {
         const url = apiRouter.editCalendar;
-        const res = await axiosClient.get<IListCalendar[]>(`${url}/${LogID}`);
+        const res = await axiosClient.get<IEditCalendar[]>(`${url}/${LogID}`);
         return res;
     } catch (error) {
         throw error;

@@ -11,7 +11,6 @@ export const apiRouter ={
     themghichu: `/api/${token}/LogCalendar`,
     role: `api/${token}/UserRole`,
     listCalendar: `api/${token}/ListCalendar`,
-    // listCalendar: `api/${token}/ListCalendar/16`,
     editCalendar: `api/${token}/EditCalendar`
 
 }
