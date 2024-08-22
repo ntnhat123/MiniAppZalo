@@ -13,5 +13,5 @@ export const apiRouter ={
     listCalendar: `api/${token}/ListCalendar`,
     editCalendar: `api/${token}/EditCalendar`,
     updatePassword: `api/${token}/UpdatePassword`,
-
+    updatePasswordAll: `api/${token}/UpdatePasswordAll`,
 }

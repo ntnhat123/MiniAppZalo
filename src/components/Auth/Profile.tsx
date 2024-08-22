@@ -56,6 +56,8 @@ const Profile = () => {
         logout();
     };
 
+    const CheckRole = (roleId) => roles?.some((role) => role?.RoleID === roleId);
+
     return (
         <div className="h-full flex flex-col items-center justify-center">
             <div className="w-full max-w-md rounded-lg p-6">
@@ -93,6 +95,20 @@ const Profile = () => {
                         />
                     </div>
                 </div>
+                <div className="mt-6">
+                    <button className="w-full bg-blue-600 text-white py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all" onClick={() => navigate("/updatepassword")}>
+                        Đổi mật khẩu
+                    </button>
+                </div>
+                {
+                    CheckRole(100) && (
+                        <div className="mt-6">
+                            <button className="w-full bg-blue-600 text-white py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all" onClick={() => navigate("/updatepasswordall")}>
+                                Đổi mật khẩu người dùng khác
+                            </button>
+                        </div>
+                    )
+                }
 
                 <div className="mt-6">
                     <button className="w-full bg-blue-600 text-white py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all" onClick={handleLogout}>
