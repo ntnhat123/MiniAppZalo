@@ -19,9 +19,10 @@ interface IProps {
     logID: string;
     lichtruc: ILichTruc[];
     listCalendar: IListCalendar[];
+    setListCalendar: React.Dispatch<React.SetStateAction<IListCalendar[]>>;
 }
 
-const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc }: IProps) => {
+const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalendar }: IProps) => {
     const [listEditCalendar, setEditCalendar] = useState<IEditCalendar[]>([]);
     const { user } = useAuth();
     const [tasks, setTasks] = useState<ICategoryTask[]>([]);
@@ -103,21 +104,42 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc }: IProps) =
         }));
       };
     const selectedOption = options.find(option => option.value === logCalendar.DanhMucNhiemVuID) ?? null;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+    
         try {
             const res = await postLogCalendar(logCalendar);
-            if(res){
-              toast.success("Chỉnh sửa nhật ký thành công",{ autoClose: 1000,draggable: true});
-              
-              handleClose();
+            if (res) {
+                toast.success("Chỉnh sửa nhật ký thành công", { autoClose: 1000, draggable: true });
+                const updatedListCalendar = listCalendar.map(item => {
+                    if (item.LogID === logID) {
+                        return {
+                            ...item,
+                            LogID: logCalendar.LogID.toString(),  // Chuyển đổi LogID từ number sang string
+                            LichID: logCalendar.LichID,
+                            NguoiTao: logCalendar.NguoiTao,
+                            ThoiGian: logCalendar.ThoiGian,
+                            GhiChu: logCalendar.GhiChu,
+                            NguyenNhan: logCalendar.NguyenNhan,
+                            NgaySuKien: logCalendar.NgaySuKien,
+                            FileTep: logCalendar.FileTep,
+                            DanhMucNhiemVuID: logCalendar.DanhMucNhiemVuID,
+                            StatusID: logCalendar.StatusID,
+                            FileName: logCalendar.FileName,
+                        };
+                    }
+                    return item;
+                });
+                
+                setListCalendar(updatedListCalendar as IListCalendar[]);
+                handleClose();
             }
-            console.log(logCalendar)
         } catch (error) {
-          toast.success("Lưu dữ liệu thất bại");
+            toast.error("Lưu dữ liệu thất bại");
         }
     };
+    
       
     return (
         <div className="flex flex-col fixed inset-0 bg-white items-center justify-center rounded-t-2xl md:rounded-3xl max-w-4xl w-full p-10 px-3 md:max-h-fit">
@@ -158,20 +180,18 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc }: IProps) =
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Nhật ký</label>
                                 <textarea
-                                    onChange={handleChange}
                                     className="shadow appearance-none border rounded w-full md:h-20 h-28 md:w-2/3 py-2 px-3 text-gray-700 leading-tight font-bold focus:outline-none focus:shadow-outline"
                                     name="GhiChu"
-                                    // value={listEditCalendar[0]?.GhiChu}
                                     value={logCalendar.GhiChu}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Nhiệm vụ</label>
                                 <Select
                                     options={options}
-                                    onChange={handleChangeSelect}
                                     value={selectedOption}
-                                    // value={listEditCalendar[0]?.DanhMucNhiemVuID}
+                                    onChange={handleChangeSelect}
                                     placeholder="--Tất cả nhiệm vụ--"
                                     isSearchable
                                     required

@@ -17,13 +17,16 @@ const ListCalendarUser = () => {
 
     const fetchCalendar = useCallback(async () => {
         try {
-            const listCalendar = await getListCalendarUser(Number(userIds));
-            setListCalendar(listCalendar.data);
+            if (userIds && userIds.length > 0) {
+                const userId = Number(userIds[0]);
+                const listCalendar = await getListCalendarUser(userId);
+                setListCalendar(listCalendar.data);
+            }
         } catch (error) {
             throw(error);
         }
     }, [userIds]);
-
+    
     useEffect(() => {
         fetchCalendar();
     }, []);
@@ -101,7 +104,7 @@ const ListCalendarUser = () => {
                     </div>
                 ))}
                 {openNote && (
-                    <PopupEditNote  lichtruc={lichtruc}  listCalendar={listCalendar} logID={selectedLogID} handleClose={handleClose} />
+                    <PopupEditNote  lichtruc={lichtruc}  listCalendar={listCalendar} logID={selectedLogID} handleClose={handleClose} setListCalendar={setListCalendar} />
                 )}
 
         </div>
