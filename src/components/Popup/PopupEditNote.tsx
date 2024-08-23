@@ -102,6 +102,7 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
           ...prevLogCalendar,
           DanhMucNhiemVuID: selectedOption ? selectedOption.value : '',
         }));
+        
       };
     const selectedOption = options.find(option => option.value === logCalendar.DanhMucNhiemVuID) ?? null;
 
@@ -131,9 +132,11 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                     }
                     return item;
                 });
-                
+                console.log(updatedListCalendar);
                 setListCalendar(updatedListCalendar as IListCalendar[]);
+                
                 handleClose();
+                
             }
         } catch (error) {
             toast.error("Lưu dữ liệu thất bại");
@@ -189,6 +192,7 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Nhiệm vụ</label>
                                 <Select
+                                    className="font-bold"
                                     options={options}
                                     value={selectedOption}
                                     onChange={handleChangeSelect}
@@ -212,7 +216,7 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thời gian tạo</label>
                                 <input
-                                    className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-bold"
                                     type="text"
                                     name="NgayTao"
                                     value={logCalendar.NgayTao}

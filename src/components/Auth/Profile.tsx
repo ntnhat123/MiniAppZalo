@@ -59,7 +59,7 @@ const Profile = () => {
     const CheckRole = (roleId) => roles?.some((role) => role?.RoleID === roleId);
 
     return (
-        <div className="h-full flex flex-col items-center justify-center">
+        <div className="h-full flex flex-col items-center bg-gradient-to-b from-blue-500 to-white justify-center">
             <div className="w-full max-w-md rounded-lg p-6">
                 <div className="flex justify-center mb-6 relative">
                     <img 
@@ -71,7 +71,7 @@ const Profile = () => {
 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-gray-600 font-semibold mb-2">Tên</label>
+                        <label className="block text-black-600 font-semibold mb-2">Tên</label>
                         <input 
                             type="text" 
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
@@ -81,12 +81,12 @@ const Profile = () => {
                     </div>
 
                     <div>
-                        <label className="block text-gray-600 font-semibold mb-2">Tên đăng nhập</label>
+                        <label className="block text-black-600 font-semibold mb-2">Tên đăng nhập</label>
                         <input type="text" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value={user?.UserName || ''}  readOnly />
                     </div>
 
                     <div>
-                        <label className="block text-gray-600 font-semibold mb-2">Địa chỉ Email</label>
+                        <label className="block text-black-600 font-semibold mb-2">Địa chỉ Email</label>
                         <input 
                             type="email" 
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
