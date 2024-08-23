@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CryptoJS, { SHA1 } from 'crypto-js';
-import { FaEyeSlash, FaLock } from "react-icons/fa";
+import { FaEyeSlash, FaLock, FaUser } from "react-icons/fa";
 import { useAuth } from 'context/authContext';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
@@ -66,14 +66,19 @@ const UpdatePasswordAllForm = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4 relative">
               <label className="block text-gray-700 text-sm font-bold mb-2">Tên đăng nhập</label>
+              <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <FaUser className="text-gray-500" />
+                </span>
               <input
                   value={username}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  placeholder="Nhập mật khẩu cũ..."
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Nhập tên đăng nhập..."
                   className="w-full pl-10 px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-transparent pr-10 border-b-2"
                   required
                   type='text'
                 />
+                </div>
             </div>
 
             <div className="mb-4 relative">
