@@ -14,13 +14,18 @@ const UpdatePasswordAllForm = () => {
   const [username, setUsername] = useState(''); // New state for username
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isRevealPassword, setIsRevealPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');  
+  const [revealOldPassword, setRevealOldPassword] = useState(false);
+  const [revealNewPassword, setRevealNewPassword] = useState(false);
   const { user, errors } = useAuth();
   const navigate = useNavigate();
 
   const togglePassword = () => {
-    setIsRevealPassword((prevState) => !prevState);
+    setRevealOldPassword((prevState) => !prevState);
+  };
+
+  const togglenewPassword = () => {
+    setRevealNewPassword((prevState) => !prevState);
   };
 
   const hashPassword = (password) => {
@@ -44,12 +49,16 @@ const UpdatePasswordAllForm = () => {
       toast.error("Tên đăng nhập không được để trống");
       return;
     }
+    
+    if (newPassword !== confirmPassword) {
+      toast.error("Mật khẩu mới và mật khẩu nhập lại không khớp");
+      return;
+    }
 
     try {
       const res = await postUpdatePassword(username, hashedOldPassword, hashedNewPassword);
       if (res) {
         toast.success("Đổi mật khẩu thành công", { autoClose: 1000, draggable: true });
-        console.log(res);
         navigate('/');
       }
     } catch (error) {
@@ -62,7 +71,7 @@ const UpdatePasswordAllForm = () => {
     <div className="flex items-center justify-center min-h-screen overflow-hidden">
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-blue-500 to-white">
         <div className="bg-white md:p-6 p-7 md:m-1 m-4 rounded-2xl shadow-lg w-96">
-          <h2 className="text-2xl font-bold mb-4 text-center">Đổi mật khẩu</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center">Đổi mật khẩu cho người dùng khác</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4 relative">
               <label className="block text-gray-700 text-sm font-bold mb-2">Tên đăng nhập</label>
@@ -93,10 +102,10 @@ const UpdatePasswordAllForm = () => {
                   placeholder="Nhập mật khẩu cũ..."
                   className="w-full pl-10 px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-transparent pr-10 border-b-2"
                   required
-                  type={isRevealPassword ? 'text' : 'password'}
+                  type={revealOldPassword ? 'text' : 'password'}
                 />
                 <span onClick={togglePassword} role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
-                  {isRevealPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                  {revealOldPassword ? <FaEyeSlash /> : <IoEyeSharp />}
                 </span>
               </div>
             </div>
@@ -113,10 +122,10 @@ const UpdatePasswordAllForm = () => {
                   placeholder="Nhập mật khẩu mới..."
                   className="w-full pl-10 px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-transparent pr-10 border-b-2"
                   required
-                  type={isRevealPassword ? 'text' : 'password'}
+                  type={revealNewPassword ? 'text' : 'password'}
                 />
-                <span onClick={togglePassword} role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
-                  {isRevealPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                <span onClick={togglenewPassword} role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+                  {revealNewPassword ? <FaEyeSlash /> : <IoEyeSharp />}
                 </span>
               </div>
             </div>
@@ -133,10 +142,10 @@ const UpdatePasswordAllForm = () => {
                   placeholder="Nhập lại mật khẩu mới..."
                   className="w-full pl-10 px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-transparent pr-10 border-b-2"
                   required
-                  type={isRevealPassword ? 'text' : 'password'}
+                  type={revealNewPassword ? 'text' : 'password'}
                 />
                 <span onClick={togglePassword} role="presentation" className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
-                  {isRevealPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                  {revealNewPassword ? <FaEyeSlash /> : <IoEyeSharp />}
                 </span>
               </div>
             </div>

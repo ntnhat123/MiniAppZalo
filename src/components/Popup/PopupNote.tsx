@@ -241,6 +241,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">File</label>
                 <input
                   onChange={handleChange}
+                  value={logCalendar.FileTep}
                   className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   type="file"
                   name="FileTep"

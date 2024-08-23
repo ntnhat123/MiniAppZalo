@@ -44,8 +44,7 @@ const ListCalendarUser = () => {
         <div className=''>
             <h3 className="text-lg mx-2 font-semibold">NHẬT KÝ CỦA NGƯỜI DÙNG</h3>
                 {listCalendar.map((calendar) => (
-                    
-                    <div className={"font-bold justify-between border mt-2 mx-2 px-3 bg-white rounded-2xl p-4 drop-shadow-2xl mb-10"}>
+                    <div key={calendar.LogID} className={"font-bold justify-between border mt-2 mx-2 px-3 bg-white rounded-2xl p-4 drop-shadow-2xl mb-10"}>
                         <div className="mb-4 flex flex-col md:flex-row md:items-center ">
                             <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày theo dõi</label>
                             <div className=' flex justify-between rounded-sm border p-2'>

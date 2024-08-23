@@ -13,6 +13,7 @@ import { ILichTruc } from "model/LichTruc";
 import { postLogCalendar } from "api/LichTruc";
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { RiErrorWarningFill } from "react-icons/ri";
 
 interface IProps {
     handleClose: () => void;
@@ -26,6 +27,7 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
     const [listEditCalendar, setEditCalendar] = useState<IEditCalendar[]>([]);
     const { user } = useAuth();
     const [tasks, setTasks] = useState<ICategoryTask[]>([]);
+    const [checkDay,setCheckDay] = useState<string>('');
     const [logCalendar, setLogCalendar] = useState<ILogCalendar>({
         LogID: 0,
         LichID: '',
@@ -87,6 +89,16 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
+        if(name === "NgaySuKien"){
+            const eventDate = new Date(value);
+            const today = new Date();
+            if(eventDate > today){
+              setCheckDay("Ngày sự kiện không thể lớn hơn ngày hiện tại.");
+            }else{
+              setCheckDay("");
+            }
+        }
+
         setLogCalendar({
             ...logCalendar,
             [name]: value
@@ -108,7 +120,9 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
+        if (checkDay) {
+            return;
+        }
         try {
             const res = await postLogCalendar(logCalendar);
             if (res) {
@@ -185,10 +199,21 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                                 <textarea
                                     className="shadow appearance-none border rounded w-full md:h-20 h-28 md:w-2/3 py-2 px-3 text-gray-700 leading-tight font-bold focus:outline-none focus:shadow-outline"
                                     name="GhiChu"
+                                    required
                                     value={logCalendar.GhiChu}
                                     onChange={handleChange}
                                 />
                             </div>
+                            <div className="mb-4 flex flex-col md:flex-row md:items-center">
+                                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ghi chú</label>
+                                    <textarea
+                                    className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    name="NguyenNhan"
+                                    placeholder="Nhập ghi chú nếu có sự cố xảy ra"
+                                    value={logCalendar.NguyenNhan}
+                                    onChange={handleChange}
+                                    />
+                            </div>   
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Nhiệm vụ</label>
                                 <Select
@@ -221,6 +246,35 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                                     name="NgayTao"
                                     value={logCalendar.NgayTao}
                                 />
+                            </div>
+                            <div className="mb-4 flex flex-col md:flex-row md:items-start">
+                                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày sự kiện/Nhật ký</label>
+                                <div className="md:w-2/3">
+                                <input
+                                    className="shadow appearance-none border rounded w-full max-h-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    type="date"
+                                    name="NgaySuKien"
+                                    value={logCalendar.NgaySuKien}
+                                    onChange={handleChange}
+                                />
+                                {
+                                    checkDay ? 
+                                    <small className="flex items-center gap-1 text-red-500 font-bold">
+                                        <RiErrorWarningFill />{checkDay}
+                                    </small>: <small className="text-gray-500 block">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
+
+                                }
+                                </div>
+                            </div>
+                            <div className="mb-4 flex flex-col md:flex-row md:items-center">
+                                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">File</label>
+                                <input
+                                    value={logCalendar.FileTep}
+                                    onChange={handleChange}
+                                    className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    type="file"
+                                    name="FileTep"
+                                    />
                             </div>
                             <div className="border-t px-4 py-2 flex justify-end">
                                 <button
