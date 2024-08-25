@@ -50,7 +50,7 @@ const UpdatePasswordForm = () => {
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("Mật khẩu mới và mật khẩu nhập lại không khớp");
+      toast.error("Mật khẩu mới và mật khẩu nhập lại không khớp",{ autoClose: 1000, draggable: true });
       return;
     }
 
