@@ -27,6 +27,16 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<ICategoryTask[]>([]);
   const [checkDay,setCheckDay] = useState<string>('');
+  const getCurrentDateInput = () => {
+    const dateObj = new Date();
+    const month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+    const day = ("0" + dateObj.getDate()).slice(-2);
+    const year = dateObj.getFullYear();
+    const shortDate = `${year}-${month}-${day}`;
+
+    return shortDate;
+  };
+
   const [logCalendar, setLogCalendar] = useState<ILogCalendar>({
     LogID: 0,
     LichID: lichtruc.map(item => item.LichID).join(','),
@@ -35,12 +45,13 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     ThoiGian: '',
     GhiChu: '',
     NguyenNhan: '',
-    NgaySuKien: '',
+    NgaySuKien: getCurrentDateInput(),
     FileTep: '',
     DanhMucNhiemVuID: '',
     StatusID: '',
     FileName: '',
   }); 
+  
 
   const fetchTasks = async () => {
     try {
@@ -103,7 +114,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
     } catch (error) {
       toast.success("Lưu dữ liệu thất bại");
     }
-  };
+  }; 
   
   const handleChangeSelect = (selectedOption) => {
     setLogCalendar((prevLogCalendar) => ({
@@ -164,7 +175,7 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
                 className="shadow appearance-none border rounded w-full max-h-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="date"
                 name="NgaySuKien"
-                value={logCalendar.NgaySuKien}
+                value={logCalendar.NgaySuKien || getCurrentDateInput()}  
               />
               {
                   checkDay ? 
@@ -197,30 +208,29 @@ const PopupNote = ({ list, handleClose, lichtruc }: IProps) => {
           </div>   
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thuộc nhiệm vụ</label>
-
-          <div className="w-full md:w-2/3">
-          <Select
-                
-                options={options}
-                onChange={handleChangeSelect}
-                value={selectedOption}
-                placeholder="--Tất cả nhiệm vụ--"
-                isSearchable 
-                required
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    boxShadow: 'none',
-                  }),
-                  menu: (base) => ({
-                    ...base,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }),
-                }}
-              />
-          </div>
+            <div className="w-full md:w-2/3">
+            <Select
+                  
+                  options={options}
+                  onChange={handleChangeSelect}
+                  value={selectedOption}
+                  placeholder="--Tất cả nhiệm vụ--"
+                  isSearchable 
+                  required
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      boxShadow: 'none',
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }),
+                  }}
+                />
+            </div>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Tình trạng</label>

@@ -5,15 +5,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import 'react-toastify/dist/ReactToastify.css';
 import Select from "react-select";
+import { toast } from 'react-toastify'
 import { getCategoryTask } from "api/CategoryTask";
 import { ICategoryTask } from "model/CategoryTask";
 import { ILogCalendar } from "model/LogCalendar";
 import { useAuth } from "context/authContext";
+import { RiErrorWarningFill } from "react-icons/ri";
 import { ILichTruc } from "model/LichTruc";
 import { postLogCalendar } from "api/LichTruc";
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
-import { RiErrorWarningFill } from "react-icons/ri";
 
 interface IProps {
     handleClose: () => void;
@@ -58,7 +57,7 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                     ThoiGian: initialData.ThoiGian || '',
                     GhiChu: initialData.GhiChu || '',
                     NguyenNhan: initialData.NguyenNhan || '',
-                    NgaySuKien: initialData.NgaySuKien || '',
+                    NgaySuKien: formatDate(initialData.NgaySuKien)|| '',
                     FileTep: initialData.FileTep || '',
                     DanhMucNhiemVuID: initialData.DanhMucNhiemVuID || '',
                     StatusID: initialData.StatusID || '',
@@ -69,8 +68,11 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
             console.error('Error fetching calendar data:', error);
         }
     }, [logID, lichtruc, user?.UserID]);
-    const selectedCalendar = listCalendar.find(calendar => calendar?.LogID === logID);
 
+    const formatDate = (dateString: string) => {
+        return dateString.split('T')[0]; 
+    };
+    const selectedCalendar = listCalendar.find(calendar => calendar?.LogID === logID);
 
     const fetchTasks = async () => {
         try {
@@ -131,7 +133,7 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                     if (item.LogID === logID) {
                         return {
                             ...item,
-                            LogID: logCalendar.LogID.toString(),  // Chuyển đổi LogID từ number sang string
+                            LogID: logCalendar.LogID.toString(), 
                             LichID: logCalendar.LichID,
                             NguoiTao: logCalendar.NguoiTao,
                             ThoiGian: logCalendar.ThoiGian,
@@ -142,11 +144,11 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                             DanhMucNhiemVuID: logCalendar.DanhMucNhiemVuID,
                             StatusID: logCalendar.StatusID,
                             FileName: logCalendar.FileName,
+                            DanhMucNhiemVuName: options.find(option => option.value === logCalendar.DanhMucNhiemVuID)?.label, 
                         };
                     }
                     return item;
                 });
-                console.log(updatedListCalendar);
                 setListCalendar(updatedListCalendar as IListCalendar[]);
                 
                 handleClose();

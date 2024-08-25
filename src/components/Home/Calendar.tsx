@@ -9,10 +9,12 @@ import { FaSearch,FaRegStickyNote } from "react-icons/fa";
 import { AiOutlineFileProtect } from "react-icons/ai";
 import { FiUser } from "react-icons/fi";
 import { useAuth } from "context/authContext";
+import { authorize,getUserInfo  } from "zmp-sdk/apis";
 
 const CalendarPage = () => {
     const navigate = useNavigate();
     const {user} = useAuth();
+    const [avatar, setAvatar] = useState('https://via.placeholder.com/100');
     const [list, setList] = useState<ICalendar[]>([]);
     const [lichtruc, setLichtruc] = useState<ILichTruc[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -47,6 +49,41 @@ const CalendarPage = () => {
             setLichtruc(res.data);
         } catch (error) {
             setError('Error fetching lichtruc data');
+        }
+    }, []);
+
+    useEffect(() => {
+        const userAuthorized = localStorage.getItem('userAuthorized');
+    
+        if (!userAuthorized) {
+            authorize({
+                scopes: ["scope.userInfo"],
+                success: () => {
+                    localStorage.setItem('userAuthorized', 'true');
+                    getUserInfo({
+                        autoRequestPermission: true, 
+                        success: (profile) => {
+                            setAvatar(profile.userInfo.avatar);
+                        },
+                        fail: (error) => {
+                            console.error('Lỗi khi lấy thông tin người dùng:', error);
+                        }
+                    });
+                },
+                fail: (error) => {
+                    console.error('Cấp quyền thất bại:', error);
+                }
+            });
+        } else {
+            getUserInfo({
+                autoRequestPermission: true, 
+                success: (profile) => {
+                    setAvatar(profile.userInfo.avatar);
+                },
+                fail: (error) => {
+                    console.error('Lỗi khi lấy thông tin người dùng:', error);
+                }
+            });
         }
     }, []);
 
@@ -141,7 +178,7 @@ const CalendarPage = () => {
                         <AiOutlineFileProtect  className="text-2xl" />
                     </div>
                     <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>
-                        <FiUser className="text-2xl" />
+                        {user ? <img src={avatar} alt="" className="w-12 h-12 rounded-full" /> : <FiUser className="text-2xl" />}
                     </div>
                 </div>
             </div>
