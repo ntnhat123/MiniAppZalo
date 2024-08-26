@@ -80,7 +80,7 @@ const ListCalendarUser = () => {
 
                 ))}
                 {openNote && (
-                    <PopupEditNote  lichtruc={lichtruc}  listCalendar={listCalendar} logID={selectedLogID} handleClose={handleClose} setListCalendar={setListCalendar} />
+                    <PopupEditNote  lichtruc={lichtruc}  listCalendar={listCalendar} logID={selectedLogID} handleClose={handleClose} setListCalendar={setListCalendar} formatDate={formatDate} />
                 )}
 
         </div>

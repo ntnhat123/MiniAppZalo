@@ -20,6 +20,7 @@ interface IProps {
     lichtruc: ILichTruc[];
     listCalendar: IListCalendar[];
     setListCalendar: React.Dispatch<React.SetStateAction<IListCalendar[]>>;
+    formatDate: (dateString: string) =>  void;
 }
 
 const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalendar }: IProps) => {
@@ -174,9 +175,9 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4 flex flex-col md:flex-row md:items-center ">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày theo dõi</label>
-                                <div className=' flex justify-between rounded-sm border p-2 font-bold'>
-                                    <span>{selectedCalendar.TuNgay}</span>
-                                    <span>{selectedCalendar.DenNgay}</span>
+                                <div className=' flex justify-between rounded-sm border p-3 font-bold'>
+                                    <span>{formatDate(selectedCalendar.TuNgay)}</span>
+                                    <span>{formatDate(selectedCalendar.DenNgay)}</span>
                                 </div>
                             </div>
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
@@ -195,6 +196,25 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                                     readOnly
                                     value={selectedCalendar?.FullName}
                                 />
+                            </div>
+                            <div className="mb-4 flex flex-col md:flex-row md:items-start">
+                                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày sự kiện/Nhật ký</label>
+                                <div className="md:w-2/3">
+                                <input
+                                    className="shadow appearance-none border rounded w-full max-h-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    type="date"
+                                    name="NgaySuKien"
+                                    value={logCalendar.NgaySuKien}
+                                    onChange={handleChange}
+                                />
+                                {
+                                    checkDay ? 
+                                    <small className="flex items-center gap-1 text-red-500 font-bold">
+                                        <RiErrorWarningFill />{checkDay}
+                                    </small>: <small className="text-gray-500 block">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
+
+                                }
+                                </div>
                             </div>
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Nhật ký</label>
@@ -248,25 +268,6 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                                     name="NgayTao"
                                     value={logCalendar.NgayTao}
                                 />
-                            </div>
-                            <div className="mb-4 flex flex-col md:flex-row md:items-start">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày sự kiện/Nhật ký</label>
-                                <div className="md:w-2/3">
-                                <input
-                                    className="shadow appearance-none border rounded w-full max-h-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    type="date"
-                                    name="NgaySuKien"
-                                    value={logCalendar.NgaySuKien}
-                                    onChange={handleChange}
-                                />
-                                {
-                                    checkDay ? 
-                                    <small className="flex items-center gap-1 text-red-500 font-bold">
-                                        <RiErrorWarningFill />{checkDay}
-                                    </small>: <small className="text-gray-500 block">(Nếu trực hôm qua mà hôm nay mới ghi nhật ký thì điền ngày đã trực)</small>
-
-                                }
-                                </div>
                             </div>
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">File</label>
