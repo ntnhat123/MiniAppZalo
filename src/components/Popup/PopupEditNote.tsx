@@ -197,6 +197,15 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                                     value={selectedCalendar?.FullName}
                                 />
                             </div>
+                            <div className="mb-4 flex flex-col md:flex-row md:items-center">
+                                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thời gian tạo</label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-bold"
+                                    type="text"
+                                    name="NgayTao"
+                                    value={logCalendar.NgayTao}
+                                />
+                            </div>
                             <div className="mb-4 flex flex-col md:flex-row md:items-start">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Ngày sự kiện/Nhật ký</label>
                                 <div className="md:w-2/3">
@@ -258,15 +267,6 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                                             textOverflow: 'ellipsis',
                                         }),
                                     }}
-                                />
-                            </div>
-                            <div className="mb-4 flex flex-col md:flex-row md:items-center">
-                                <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">Thời gian tạo</label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-bold"
-                                    type="text"
-                                    name="NgayTao"
-                                    value={logCalendar.NgayTao}
                                 />
                             </div>
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
