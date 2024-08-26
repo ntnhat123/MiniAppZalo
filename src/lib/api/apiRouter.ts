@@ -9,5 +9,9 @@ export const apiRouter ={
     CategoryTask: `/api/${token}/DanhMucNhiemVu`,
     lichtruc: `/api/${token}/Calendar`,
     themghichu: `/api/${token}/LogCalendar`,
-    role: `api/${token}/UserRole`
+    role: `api/${token}/UserRole`,
+    listCalendar: `api/${token}/ListCalendar`,
+    editCalendar: `api/${token}/EditCalendar`,
+    updatePassword: `api/${token}/UpdatePassword`,
+    updatePasswordAll: `api/${token}/UpdatePasswordAll`,
 }

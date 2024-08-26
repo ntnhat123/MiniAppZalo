@@ -12,6 +12,16 @@
     "hideAndroidBottomNavigationBar": false,
     "hideIOSSafeAreaBottom": false
   },
+  "api": {
+    "login": true,
+    "user": {
+      "getUserInfo": true,
+      "authorize": true,
+      "location": true,
+      "phoneNumber": true,
+      "userInfo": true
+    }
+  },
   "debug": false,
   "pages": [],
   "listCSS": [],

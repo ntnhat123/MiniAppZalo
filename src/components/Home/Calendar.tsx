@@ -1,19 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getCalendar } from "api/Calendar";
 import { ICalendar } from "model/Calendar";
-import { FaRegStickyNote } from "react-icons/fa";
 import PopupNote from "components/Popup/PopupNote";
 import { getLichTruc } from "api/LichTruc";
 import { ILichTruc } from "model/LichTruc";
 import { useNavigate } from "react-router-dom";
-import LogoImage from 'logo.jpg'
-import { FaSearch } from "react-icons/fa";
+import { FaSearch,FaRegStickyNote } from "react-icons/fa";
+import { AiOutlineFileProtect } from "react-icons/ai";
 import { FiUser } from "react-icons/fi";
 import { useAuth } from "context/authContext";
+import { authorize,getUserInfo  } from "zmp-sdk/apis";
 
 const CalendarPage = () => {
     const navigate = useNavigate();
     const {user} = useAuth();
+    const [avatar, setAvatar] = useState('https://via.placeholder.com/100');
     const [list, setList] = useState<ICalendar[]>([]);
     const [lichtruc, setLichtruc] = useState<ILichTruc[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -48,6 +49,41 @@ const CalendarPage = () => {
             setLichtruc(res.data);
         } catch (error) {
             setError('Error fetching lichtruc data');
+        }
+    }, []);
+
+    useEffect(() => {
+        const userAuthorized = localStorage.getItem('userAuthorized');
+    
+        if (!userAuthorized) {
+            authorize({
+                scopes: ["scope.userInfo"],
+                success: () => {
+                    localStorage.setItem('userAuthorized', 'true');
+                    getUserInfo({
+                        autoRequestPermission: true, 
+                        success: (profile) => {
+                            setAvatar(profile.userInfo.avatar);
+                        },
+                        fail: (error) => {
+                            console.error('Lỗi khi lấy thông tin người dùng:', error);
+                        }
+                    });
+                },
+                fail: (error) => {
+                    console.error('Cấp quyền thất bại:', error);
+                }
+            });
+        } else {
+            getUserInfo({
+                autoRequestPermission: true, 
+                success: (profile) => {
+                    setAvatar(profile.userInfo.avatar);
+                },
+                fail: (error) => {
+                    console.error('Lỗi khi lấy thông tin người dùng:', error);
+                }
+            });
         }
     }, []);
 
@@ -133,13 +169,17 @@ const CalendarPage = () => {
 
     return (
         <div className="min-h-screen flex flex-col items-center p-4 ">
-            <div className="flex w-full justify-between items-center xl:px-[250px] pb-5">
+            <div className="flex w-full justify-between items-center xl:px-[500px] pb-5">
                 <div className="flex items-center">
                     <h1 className="text-xl font-serif">{user ? user?.FullName : 'LỊCH THEO DÕI DC'}</h1>
                 </div>
-                
-                <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>
-                    <FiUser className="text-2xl" />
+                <div className="flex gap-5">
+                    <div className="flex items-center justify-center" onClick={() => user ? navigate('/listcalendar') : navigate('/login')}>
+                        <AiOutlineFileProtect  className="text-2xl" />
+                    </div>
+                    <div className="flex items-center justify-center" onClick={() => user ? navigate('/profile') : navigate('/login')}>
+                        {user ? <img src={avatar} alt="" className="w-12 h-12 rounded-full" /> : <FiUser className="text-2xl" />}
+                    </div>
                 </div>
             </div>
             <div className="bg-white px-10 py-5 mb-5 rounded-xl">
@@ -203,9 +243,6 @@ const CalendarPage = () => {
             {openNote && selectedItem && (
                 <PopupNote lichtruc={lichtruc} handleClose={handleClose} list={selectedItem} />
             )}
-            <button className="bg-gray-700 text-white px-4 py-2 rounded-lg mt-4" onClick={() => {navigate('/role')}}>
-                Role
-            </button>
         </div>
     );
 };

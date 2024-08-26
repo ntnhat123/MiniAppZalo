@@ -7,6 +7,11 @@ import { AuthProvider } from "context/authContext";
 import LoginPage from "pages/login";
 import RolePage from "pages/role";
 import UserPage from "pages/user";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import ListCalendarUser from "./ListCalendarUser/ListCalendarUser";
+import UpdatePasswordForm from "./Auth/UpdatePassword";
+import UpdatePasswordAllForm from "./Auth/UpdatePasswordAll";
 
 const MyApp = () => {
   return (
@@ -20,7 +25,11 @@ const MyApp = () => {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/profile" element={<UserPage />}  />
                     <Route path="/role" element={<RolePage />} />
+                    <Route path="/listcalendar" element={<ListCalendarUser />} />
+                    <Route path="/updatepassword" element={<UpdatePasswordForm />} />
+                    <Route path="/updatepasswordall" element={<UpdatePasswordAllForm />} />
                   </AnimationRoutes>
+                  <ToastContainer />
               </AuthProvider>
             </ZMPRouter>
         </SnackbarProvider>

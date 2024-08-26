@@ -5,12 +5,14 @@ import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash,FaUser,FaLock } from "react-icons/fa";
 import { useAuth } from 'context/authContext';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isRevealPassword, setIsRevealPassword] = useState(false);
-  const {login,errors} = useAuth();
+  const {user,login,errors} = useAuth();
+  const navigate = useNavigate();
 
   const togglePassword = () => {
     setIsRevealPassword((prevState) => !prevState);
@@ -26,6 +28,12 @@ const LoginForm = () => {
     }
     login(username,hashpassword)
   }
+
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   return (
   <div className="flex items-center justify-center min-h-screen overflow-hidden">
