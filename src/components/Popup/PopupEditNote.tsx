@@ -88,8 +88,18 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
         fetchTasks();
     }, []);
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]; 
+        if (file) {
+            setLogCalendar({
+                ...logCalendar,
+                FileTep: file, 
+            });
+        }
+    };
+    
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement >) => {
         const { name, value } = e.target;
 
         if(name === "NgaySuKien"){
@@ -272,8 +282,7 @@ const PopupEditNote = ({ handleClose, logID, listCalendar, lichtruc,setListCalen
                             <div className="mb-4 flex flex-col md:flex-row md:items-center">
                                 <label className="block text-gray-700 text-sm font-bold mb-2 md:mb-0 md:w-1/3">File</label>
                                 <input
-                                    value={logCalendar.FileTep}
-                                    onChange={handleChange}
+                                    onChange={handleFileChange}
                                     className="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     type="file"
                                     name="FileTep"

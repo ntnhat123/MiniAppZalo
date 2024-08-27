@@ -6,7 +6,7 @@ export interface ILogCalendar{
     GhiChu: string,
     NguyenNhan: string,
     NgaySuKien: string,
-    FileTep: string,
+    FileTep: string | File;
     DanhMucNhiemVuID: string,
     StatusID: string,
     FileName: string,
